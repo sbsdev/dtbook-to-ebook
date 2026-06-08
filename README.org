@@ -1,0 +1,80 @@
+#+title: dtbook-to-ebook
+#+author: Christian Egli
+#+language: en
+
+SBS-specific EPUB3 converter for the [[https://daisy.org/activities/software/daisy-pipeline/][DAISY Pipeline 2]].
+
+Converts DTBook XML to EPUB3 using the standard DAISY Pipeline
+~dtbook-to-epub3~ script, with SBS-specific preprocessing, CSS, and
+accessibility metadata layered on top as a thin wrapper module.
+
+See [[file:doc/Architecture_Decision_Records.org][doc/Architecture_Decision_Records.org]] for the background and the
+decision to replace the old Nordic migrator fork with this module.
+
+* Requirements
+
+- Java 8
+- Maven 3.5+
+
+* Build
+
+#+begin_src sh
+mvn clean package
+#+end_src
+
+* Test
+
+#+begin_src sh
+mvn test
+#+end_src
+
+Run a single XSpec test:
+
+#+begin_src sh
+mvn test -Dxspec.includes=**/addBoilerplate.xspec
+#+end_src
+
+* Architecture
+
+The module is a single OSGi bundle that wraps the standard DAISY
+Pipeline ~dtbook-to-epub3~ script. The SBS delta consists of:
+
+- *14 preprocessing XSLTs* applied to the DTBook before conversion
+  (boilerplate injection, footnote relocation, image ref wiring, etc.)
+- *~accessibility.css~* with SBS-specific visual adjustments
+- *Post-processing* for OPF accessibility metadata and content
+  structure corrections
+- *~translations.xml~* for i18n boilerplate (Italian, Sursilvan)
+
+#+begin_example
+DTBook
+  └─▶ SBS preprocessing (14 XSLTs)
+        └─▶ daisy:dtbook-to-epub3  (standard, upstream)
+              └─▶ SBS post-processing (metadata, CSS injection)
+                    └─▶ EPUB3
+#+end_example
+
+* SBS Requirements
+
+For the full list of SBS-specific requirements that this module
+implements, see [[file:doc/Architecture_Decision_Records.org::*SBS Requirements][the ADR]].
+
+* Regression testing
+
+~scripts/compare-epub.bb~ compares EPUB output between two Pipeline
+instances (e.g. production vs. test). Modelled on
+[[file:~/src/dp2/scripts/compare-braille.bb][dp2/scripts/compare-braille.bb]].
+
+#+begin_src sh
+./scripts/compare-epub.bb compare-epub-config.edn
+#+end_src
+
+Config format (~compare-epub-config.edn~):
+
+#+begin_src clojure
+{:prod-url   "https://pipeline.prod.example.com"
+ :test-url   "https://pipeline.test.example.com"
+ :token      "Token <your-jwt-token>"
+ :output-dir "/tmp/epub-cmp"   ; optional
+ :limit      100}              ; optional
+#+end_src
