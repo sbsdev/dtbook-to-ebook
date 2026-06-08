@@ -1,0 +1,192 @@
+#+options: todo:t
+#+title: Architecture Decision Records
+#+date: <2026-06-08 Mo>
+#+author: Christian Egli
+#+email: christian.egli@sbs.ch
+#+language: en
+
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+
+* PROPOSED Replace SBS EPUB fork with standard DAISY Pipeline converter
+- Deciders :: CE
+- Date :: [2026-06-08 Mo]
+
+SBS produces EPUB3 files from DTBook XML using a heavily modified fork
+of the Nordic EPUB3 DTBook Migrator embedded in an outdated DAISY
+Pipeline assembly. The fork is unmaintained, barely builds, and carries
+a significant maintenance burden.
+
+** Context and Problem Statement
+
+The current SBS EPUB converter is based on a fork of the Nordic
+Migrator (~modules/sbs/epub3-dtbook-migrator~ in the ~sbsdev/pipeline~
+assembly). The Nordic migrator has been archived by its maintainers
+and receives no upstream updates. The entire pipeline assembly fork is
+so outdated that it barely builds anymore. SBS does not want to
+maintain its own EPUB converter when a standard one is available in
+the DAISY Pipeline.
+
+The goal is to drop the old fork and produce EPUBs using the newest
+off-the-shelf DAISY Pipeline, while keeping all existing SBS-specific
+behaviour so that the generated EPUBs remain identical.
+
+** Decision Drivers
+
+- Maintenance burden :: The Nordic migrator fork is unmaintained;
+  staying on it means SBS owns all future fixes.
+- Build stability :: The old pipeline assembly barely builds; each
+  dependency update is a manual effort.
+- Separation of concerns :: SBS requirements are a well-defined delta
+  on top of a standard converter. That delta should be owned and tested
+  independently.
+- Testability :: A standalone module can carry its own XSpec test suite
+  that validates every SBS requirement in isolation.
+
+** Considered Options
+
+*** Option A — Migrate the fork to a newer version of the Nordic migrator
+
+Pick up the Nordic migrator from its last upstream commit and rebase
+the SBS-specific XSLT overrides onto it.
+
+*** Option B — Re-implement SBS requirements on top of the standard ~dtbook-to-epub3~ script
+
+Create a new standalone module that calls the maintained DAISY Pipeline
+~dtbook-to-epub3~ script and layers all SBS requirements as pre- and
+post-processing XProc steps.
+
+*** Option C — Port the full pipeline assembly fork to a newer DAISY Pipeline version
+
+Rebase all 30+ git-subrepos, resolve module API drift across versions,
+and untangle partially-implemented features (e.g. the commented-out
+braille rendition).
+
+** Decision Outcome
+
+Chosen option: *Option B — standalone module wrapping the standard
+dtbook-to-epub3 script*, because it directly addresses the maintenance
+problem (upstream script is actively maintained), cleanly separates the
+SBS delta from the standard conversion, and makes every SBS requirement
+independently testable via XSpec.
+
+This repository (~dtbook-to-ebook~) is that standalone module. It
+will be added to the DAISY Pipeline assembly as a regular Maven
+dependency.
+
+*** Positive Consequences
+
+- SBS only owns the delta (preprocessing XSLTs, CSS, metadata
+  injections, i18n), not a fork of a full converter.
+- XSpec tests on the preprocessing transforms become a permanent
+  regression suite.
+- Upgrading the underlying pipeline means updating a dependency
+  version, not rebasing a fork.
+
+*** Negative Consequences
+
+- The standard ~dtbook-to-epub3~ uses a different conversion path
+  (DTBook → ZEDAI → HTML → EPUB3) compared to the Nordic migrator
+  (DTBook → HTML → EPUB3). Equivalence of the output must be verified
+  empirically via regression testing against real production books.
+- Initial effort to port 14 preprocessing XSLTs and validate output
+  against 100+ production EPUBs.
+
+** Pros and Cons of the Options
+
+*** Option A — Migrate to a newer Nordic migrator
+
+- Good :: Smallest code change; existing XSLT overrides apply directly.
+- Bad :: The Nordic migrator is archived — SBS would own all future
+  maintenance with no upstream.
+- Bad :: Postpones the maintenance problem without solving it.
+
+*** Option B — Standalone module on standard dtbook-to-epub3
+
+- Good :: Standard pipeline script is actively maintained by DAISY.
+- Good :: Clean boundary between upstream and SBS; the 14 preprocessing
+  XSLTs are pure XSLT and require no changes.
+- Good :: Standalone repo with its own CI, XSpec suite, and release
+  cycle.
+- Bad :: Different conversion path requires empirical output validation.
+
+*** Option C — Port full assembly fork to a newer DAISY Pipeline
+
+- Good :: Preserves all existing code and history.
+- Bad :: Enormous effort: 30+ subrepos, module API drift, commented-out
+  features.
+- Bad :: Does not solve the maintenance problem; SBS still owns a full
+  pipeline fork.
+
+** SBS Requirements
+
+The following requirements are carried over from the old fork and must
+be preserved. Each must be covered by an XSpec test.
+
+*** CSS / Visual appearance
+- No hard-coded font size
+- Line-height as a factor, not a percentage
+- Image width 60%
+- Block-display class for images following captions
+- ~list-style-type~ for ~ol~ and ~ul~
+
+*** Boilerplate text
+- Copyright, usage restrictions, and producer information in frontmatter
+- Boilerplate text for extended image descriptions
+
+*** Content structure
+- UTF-8 output; no ASCII encoding
+- No dyslexic font
+- Clean namespace handling in package document
+- Inline prodnotes rendered as ~<span>~
+- Retain ~dtbook:hd~ inside ~dtbook:list~
+- ~dtbook:epigraph~ rendered as ~<blockquote>~ (both ~blockquote~ and ~p~ children)
+- Fake frontmatter sections changed to ~<div>~
+- Poems without a header rendered as ~<div>~
+
+*** Image and caption handling
+- Caption placed before the image
+- No ~longdesc~ attribute; use ~aria-describedby~ instead
+- ~imgref~ inserted automatically for image/prodnote groups
+- Boilerplate text for extended image descriptions
+
+*** Accessibility metadata (OPF)
+- ~schema:accessMode~ and ~schema:accessibilityFeature~ present
+- ~alternativeText~ metadata only when images have alt text
+- ~schema:accessMode textual~ always; ~visual~ only when images are present
+- Correct ~accessModeSufficient~ values
+- ~longDescription~ value in ~accessibilityFeature~
+- Metadata value in ~content~ attribute
+
+*** Navigation
+- Footnotes moved to rearmatter
+- Anchor inserted before each noteref
+- Backlink from each footnote to its noteref
+- Rearmatter footnote chapter only added when footnotes exist
+
+*** Language support
+- i18n for boilerplate text (currently Italian and Sursilvan)
+
+** Implementation Plan
+
+1. Write XSpec tests for every requirement above (failing).
+2. Copy the 14 preprocessing XSLTs from the old module verbatim; run
+   XSpec — most pass immediately.
+3. Wire the standard ~dtbook-to-epub3.xpl~ as the base step in a new
+   XProc wrapper (~sbs-dtbook-to-epub3.xpl~).
+4. Port the XSLT overrides (epigraph, prodnote-as-span, caption order,
+   namespace cleanup, OPF metadata) as post-processing steps until all
+   XSpec tests pass.
+5. Add one end-to-end Maven integration test (real DTBook fixture,
+   assert on EPUB content).
+6. Write and run ~scripts/compare-epub.bb~ against 100 production books
+   (modelled on ~dp2/scripts/compare-braille.bb~); fix discrepancies
+   until 100/100 pass.
+7. Add this module as a Maven dependency in the pipeline assembly;
+   remove the old ~epub3-dtbook-migrator~ subrepo.
+
+** Links
+
+- [[file:~/src/pipeline/modules/sbs/dtbook-to-ebook/README.org][Old module: requirements list]]
+- [[file:~/src/pipeline/modules/sbs/dtbook-to-ebook/src/main/resources/xml/xproc/dtbook-to-ebook.xpl][Old module: main XProc entry point]]
+- [[file:~/src/pipeline/modules/sbs/epub3-dtbook-migrator/][Old module: Nordic migrator fork]]
+- [[file:~/src/dp2/scripts/compare-braille.bb][compare-braille.bb — template for the EPUB regression script]]
