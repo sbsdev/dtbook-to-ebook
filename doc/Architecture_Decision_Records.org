@@ -119,56 +119,11 @@ dependency.
 
 ** SBS Requirements
 
-The following requirements are carried over from the old fork and must
-be preserved. Each must be covered by an XSpec test.
-
-*** CSS / Visual appearance
-- No hard-coded font size
-- Line-height as a factor, not a percentage
-- Image width 60%
-- Block-display class for images following captions
-- ~list-style-type~ for ~ol~ and ~ul~
-
-*** Boilerplate text
-- Copyright, usage restrictions, and producer information in frontmatter
-- Boilerplate text for extended image descriptions
-
-*** Content structure
-- UTF-8 output; no ASCII encoding
-- No dyslexic font
-- Clean namespace handling in package document
-- Inline prodnotes rendered as ~<span>~
-- Retain ~dtbook:hd~ inside ~dtbook:list~
-- ~dtbook:epigraph~ rendered as ~<blockquote>~ (both ~blockquote~ and ~p~ children)
-- Fake frontmatter sections changed to ~<div>~
-- Poems without a header rendered as ~<div>~
-
-*** Image and caption handling
-- Caption placed before the image
-- No ~longdesc~ attribute; use ~aria-describedby~ instead
-- ~imgref~ inserted automatically for image/prodnote groups
-- Boilerplate text for extended image descriptions
-
-*** Accessibility metadata (OPF)
-- ~schema:accessMode~ and ~schema:accessibilityFeature~ present
-- ~alternativeText~ metadata only when images have alt text
-- ~schema:accessMode textual~ always; ~visual~ only when images are present
-- Correct ~accessModeSufficient~ values
-- ~longDescription~ value in ~accessibilityFeature~
-- Metadata value in ~content~ attribute
-
-*** Navigation
-- Footnotes moved to rearmatter
-- Anchor inserted before each noteref
-- Backlink from each footnote to its noteref
-- Rearmatter footnote chapter only added when footnotes exist
-
-*** Language support
-- i18n for boilerplate text (currently Italian and Sursilvan)
+The full requirements are maintained in [[file:requirements.org][doc/requirements.org]].
 
 ** Implementation Plan
 
-1. Write XSpec tests for every requirement above (failing).
+1. Write XSpec tests for every requirement in [[file:requirements.org][doc/requirements.org]] (failing).
 2. Copy the 14 preprocessing XSLTs from the old module verbatim; run
    XSpec — most pass immediately.
 3. Wire the standard ~dtbook-to-epub3.xpl~ as the base step in a new
