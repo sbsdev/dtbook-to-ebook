@@ -7,7 +7,7 @@
                xmlns:epub="http://www.idpf.org/2007/ops"
                stylesheet="../../main/resources/xml/xslt/dtbook-to-epub3.sbs.xsl">
 
-  <x:scenario label="dtbook:epigraph is rendered as html:blockquote" pending="Phase 3">
+  <x:scenario label="dtbook:epigraph is rendered as html:blockquote">
     <x:context>
       <dtb:epigraph>
         <dtb:p>To be or not to be.</dtb:p>
@@ -20,7 +20,7 @@
     </x:expect>
   </x:scenario>
 
-  <x:scenario label="dtbook:epigraph with blockquote child is rendered correctly" pending="Phase 3">
+  <x:scenario label="dtbook:epigraph with blockquote child is rendered correctly">
     <x:context>
       <dtb:epigraph>
         <dtb:blockquote><dtb:p>Quote</dtb:p></dtb:blockquote>
@@ -33,7 +33,7 @@
     </x:expect>
   </x:scenario>
 
-  <x:scenario label="inline dtbook:prodnote is rendered as html:span" pending="Phase 3">
+  <x:scenario label="inline dtbook:prodnote is rendered as html:span">
     <x:context>
       <dtb:p>Text <dtb:prodnote render="inline">note</dtb:prodnote> more</dtb:p>
     </x:context>
@@ -42,7 +42,7 @@
     </x:expect>
   </x:scenario>
 
-  <x:scenario label="dtbook:hd inside dtbook:list is retained" pending="Phase 3">
+  <x:scenario label="dtbook:hd inside dtbook:list is retained">
     <x:context>
       <dtb:list>
         <dtb:hd>List heading</dtb:hd>
@@ -52,7 +52,7 @@
     <x:expect label="list heading is present in output" test="exists(//html:*[. = 'List heading'])"/>
   </x:scenario>
 
-  <x:scenario label="fake frontmatter section is changed to div" pending="Phase 3">
+  <x:scenario label="fake frontmatter section is changed to div">
     <x:context>
       <dtb:level1 class="frontmatter-placeholder">
         <dtb:h1>Fake section</dtb:h1>
@@ -62,7 +62,7 @@
               test="exists(//html:div) and not(exists(//html:section))"/>
   </x:scenario>
 
-  <x:scenario label="poem without a header is rendered as div" pending="Phase 3">
+  <x:scenario label="poem without a header is rendered as div">
     <x:context>
       <dtb:poem>
         <dtb:linegroup><dtb:line>A line</dtb:line></dtb:linegroup>
@@ -72,7 +72,7 @@
               test="exists(//html:div) and not(exists(//html:section))"/>
   </x:scenario>
 
-  <x:scenario label="caption is placed before the image" pending="Phase 3">
+  <x:scenario label="caption is placed before the image">
     <x:context>
       <dtb:imggroup>
         <dtb:img id="img1" src="photo.jpg" alt="photo"/>
@@ -80,10 +80,10 @@
       </dtb:imggroup>
     </x:context>
     <x:expect label="figcaption precedes img in output"
-              test="//html:figure/html:figcaption/following-sibling::html:img"/>
+              test="exists(//html:figure/html:figcaption/following-sibling::html:img)"/>
   </x:scenario>
 
-  <x:scenario label="longdesc attribute is absent from output images" pending="Phase 3">
+  <x:scenario label="longdesc attribute is absent from output images">
     <x:context>
       <dtb:imggroup>
         <dtb:img id="img1" src="photo.jpg" alt="photo"/>

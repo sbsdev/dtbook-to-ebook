@@ -7,7 +7,7 @@
                xmlns:schema="http://schema.org/"
                stylesheet="../../main/resources/xml/xslt/package-doc.sbs.xsl">
 
-  <x:scenario label="schema:accessMode and schema:accessibilityFeature meta elements are present" pending="Phase 3">
+  <x:scenario label="schema:accessMode and schema:accessibilityFeature meta elements are present">
     <x:context>
       <opf:package>
         <opf:metadata>
@@ -21,7 +21,7 @@
               test="exists(//opf:meta[@property='schema:accessibilityFeature'])"/>
   </x:scenario>
 
-  <x:scenario label="schema:accessMode textual is always present" pending="Phase 3">
+  <x:scenario label="schema:accessMode textual is always present">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
@@ -32,7 +32,7 @@
               test="exists(//opf:meta[@property='schema:accessMode' and . = 'textual'])"/>
   </x:scenario>
 
-  <x:scenario label="schema:accessMode visual is present only when images exist" pending="Phase 3">
+  <x:scenario label="schema:accessMode visual is present only when images exist">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
@@ -45,7 +45,7 @@
               test="exists(//opf:meta[@property='schema:accessMode' and . = 'visual'])"/>
   </x:scenario>
 
-  <x:scenario label="schema:accessMode visual is absent when no images exist" pending="Phase 3">
+  <x:scenario label="schema:accessMode visual is absent when no images exist">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
@@ -58,7 +58,7 @@
               test="not(exists(//opf:meta[@property='schema:accessMode' and . = 'visual']))"/>
   </x:scenario>
 
-  <x:scenario label="alternativeText accessibilityFeature is present only when images have alt text" pending="Phase 3">
+  <x:scenario label="alternativeText accessibilityFeature is present only when images have alt text">
     <x:context>
       <!-- Book with image that has alt text -->
       <opf:package>
@@ -69,7 +69,7 @@
               test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'alternativeText'])"/>
   </x:scenario>
 
-  <x:scenario label="accessModeSufficient values are correct" pending="Phase 3">
+  <x:scenario label="accessModeSufficient values are correct">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Book</dc:title></opf:metadata>
@@ -80,7 +80,7 @@
               test="exists(//opf:meta[@property='schema:accessModeSufficient'])"/>
   </x:scenario>
 
-  <x:scenario label="longDescription value is present in accessibilityFeature" pending="Phase 3">
+  <x:scenario label="longDescription value is present in accessibilityFeature">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Book</dc:title></opf:metadata>
@@ -90,7 +90,7 @@
               test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'longDescription'])"/>
   </x:scenario>
 
-  <x:scenario label="metadata values are in the content attribute" pending="Phase 3">
+  <x:scenario label="metadata values are in the content attribute">
     <x:context>
       <opf:package>
         <opf:metadata><dc:title>Book</dc:title></opf:metadata>
