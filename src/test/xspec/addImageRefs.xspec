@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addImageRefs.xsl">
+
+  <x:scenario label="first prodnote in imggroup without any imgref gets imgref pointing to preceding img">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote>A description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="prodnote has imgref set to img id">
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">A description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="prodnote with existing imgref is not modified">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">A description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="prodnote imgref is unchanged">
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">A description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="second prodnote in imggroup where first already has imgref does not get one added">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">Short description</dtb:prodnote>
+        <dtb:prodnote>Long description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="second prodnote has no imgref added" test="not(dtb:imggroup/dtb:prodnote[2]/@imgref)"/>
+  </x:scenario>
+
+  <x:scenario label="prodnote outside imggroup is not modified">
+    <x:context>
+      <dtb:p><dtb:prodnote>standalone note</dtb:prodnote></dtb:p>
+    </x:context>
+    <x:expect label="prodnote has no imgref">
+      <dtb:p><dtb:prodnote>standalone note</dtb:prodnote></dtb:p>
+    </x:expect>
+  </x:scenario>
+
+</x:description>

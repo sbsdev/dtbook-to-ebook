@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Requires catalog resolution of http://www.daisy.org/pipeline/modules/common-utils/i18n.xsl -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addBoilerplate.xsl">
+
+  <x:scenario label="boilerplate level1 is inserted before the first titlepage level1 in frontmatter (German)">
+    <x:context>
+      <dtb:dtbook xml:lang="de">
+        <dtb:book>
+          <dtb:frontmatter>
+            <dtb:level1 class="titlepage">
+              <dtb:h1>My Book</dtb:h1>
+            </dtb:level1>
+          </dtb:frontmatter>
+        </dtb:book>
+      </dtb:dtbook>
+    </x:context>
+    <x:expect label="frontmatter now has two level1 elements"
+              test="count(//dtb:frontmatter/dtb:level1) = 2"/>
+    <x:expect label="boilerplate level1 comes before titlepage"
+              test="//dtb:frontmatter/dtb:level1[1]/@class != 'titlepage'"/>
+    <x:expect label="boilerplate heading is 'Zu diesem Buch'"
+              test="//dtb:frontmatter/dtb:level1[1]/dtb:h1 = 'Zu diesem Buch'"/>
+    <x:expect label="boilerplate contains copyright text"
+              test="contains(//dtb:frontmatter/dtb:level1[1]/dtb:p[1], 'EPUB')"/>
+    <x:expect label="titlepage is still present after boilerplate"
+              test="//dtb:frontmatter/dtb:level1[2]/@class = 'titlepage'"/>
+  </x:scenario>
+
+  <x:scenario label="boilerplate heading is in Italian for Italian documents">
+    <x:context>
+      <dtb:dtbook xml:lang="it">
+        <dtb:book>
+          <dtb:frontmatter>
+            <dtb:level1 class="titlepage">
+              <dtb:h1>Il Libro</dtb:h1>
+            </dtb:level1>
+          </dtb:frontmatter>
+        </dtb:book>
+      </dtb:dtbook>
+    </x:context>
+    <x:expect label="boilerplate heading is Italian"
+              test="//dtb:frontmatter/dtb:level1[1]/dtb:h1 = 'In questo libro'"/>
+  </x:scenario>
+
+  <x:scenario label="electronic data thanks paragraph is added when prod:source is electronicData">
+    <x:context>
+      <dtb:dtbook xml:lang="de">
+        <dtb:head>
+          <dtb:meta name="prod:source" content="electronicData"/>
+          <dtb:meta name="dc:date" content="2024-01-01"/>
+        </dtb:head>
+        <dtb:book>
+          <dtb:frontmatter>
+            <dtb:level1 class="titlepage"><dtb:h1>Book</dtb:h1></dtb:level1>
+          </dtb:frontmatter>
+        </dtb:book>
+      </dtb:dtbook>
+    </x:context>
+    <x:expect label="electronic data thanks paragraph is present"
+              test="contains(//dtb:frontmatter/dtb:level1[1], 'Verlag')"/>
+  </x:scenario>
+
+  <x:scenario label="non-titlepage frontmatter level1 is not preceded by boilerplate">
+    <x:context>
+      <dtb:dtbook xml:lang="de">
+        <dtb:book>
+          <dtb:frontmatter>
+            <dtb:level1 class="other"><dtb:h1>Other</dtb:h1></dtb:level1>
+            <dtb:level1 class="titlepage"><dtb:h1>Title</dtb:h1></dtb:level1>
+          </dtb:frontmatter>
+        </dtb:book>
+      </dtb:dtbook>
+    </x:context>
+    <x:expect label="there are three level1 elements (boilerplate + other + titlepage)"
+              test="count(//dtb:frontmatter/dtb:level1) = 3"/>
+    <x:expect label="boilerplate is before the titlepage, not before the other section"
+              test="//dtb:frontmatter/dtb:level1[2]/@class = 'other'"/>
+  </x:scenario>
+
+</x:description>

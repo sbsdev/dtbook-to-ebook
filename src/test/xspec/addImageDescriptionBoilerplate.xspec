@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Requires catalog resolution of http://www.daisy.org/pipeline/modules/common-utils/i18n.xsl -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addImageDescriptionBoilerplate.xsl">
+
+  <x:scenario label="prodnote with imgref gets a boilerplate paragraph prepended (German)">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">A description of the image.</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="prodnote first child is a paragraph"
+              test="//dtb:prodnote/dtb:p[1]"/>
+    <x:expect label="boilerplate paragraph text is 'Bildbeschreibung:'"
+              test="//dtb:prodnote/dtb:p[1] = 'Bildbeschreibung:'"/>
+    <x:expect label="original description text is still present"
+              test="contains(string(//dtb:prodnote), 'A description of the image.')"/>
+  </x:scenario>
+
+  <x:scenario label="boilerplate is injected exactly once per prodnote">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote imgref="img1">Description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="exactly one boilerplate paragraph is added"
+              test="count(//dtb:prodnote/dtb:p[. = 'Bildbeschreibung:']) = 1"/>
+  </x:scenario>
+
+  <x:scenario label="prodnote without imgref does not receive boilerplate">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote>Description without imgref</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="prodnote is unchanged">
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+        <dtb:prodnote>Description without imgref</dtb:prodnote>
+      </dtb:imggroup>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="boilerplate text is Italian for Italian documents">
+    <x:context>
+      <dtb:imggroup xml:lang="it">
+        <dtb:img id="img1" src="photo.jpg" alt="foto"/>
+        <dtb:prodnote imgref="img1">Descrizione</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="boilerplate paragraph text is Italian"
+              test="//dtb:prodnote/dtb:p[1] = 'Descrizione dell&apos;immagine:'"/>
+  </x:scenario>
+
+</x:description>

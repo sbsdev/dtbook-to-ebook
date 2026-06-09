@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Requires catalog resolution of http://www.daisy.org/pipeline/modules/common-utils/i18n.xsl -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addFootnoteBacklinks.xsl">
+
+  <x:scenario label="backlink is appended to each note (German)">
+    <!-- Full document context needed for // lookup of noteref by id -->
+    <x:context select="//dtb:note">
+      <dtb:book>
+        <dtb:bodymatter>
+          <dtb:level1>
+            <dtb:p>Text<dtb:a id="noteref_1"/><dtb:noteref idref="#fn1">1</dtb:noteref></dtb:p>
+          </dtb:level1>
+        </dtb:bodymatter>
+        <dtb:rearmatter>
+          <dtb:level1>
+            <dtb:note id="fn1"><dtb:p>Footnote text</dtb:p></dtb:note>
+          </dtb:level1>
+        </dtb:rearmatter>
+      </dtb:book>
+    </x:context>
+    <x:expect label="note contains a backlink paragraph at the end"
+              test="dtb:note/dtb:p[last()]/dtb:a/@href = '#noteref_1'"/>
+    <x:expect label="backlink text is 'Zurück' for German"
+              test="dtb:note/dtb:p[last()]/dtb:a = 'Zurück'"/>
+  </x:scenario>
+
+  <x:scenario label="backlink uses Italian text for Italian language">
+    <x:context select="//dtb:note">
+      <dtb:book xml:lang="it">
+        <dtb:bodymatter>
+          <dtb:level1>
+            <dtb:p>Testo<dtb:a id="noteref_1"/><dtb:noteref idref="#fn1">1</dtb:noteref></dtb:p>
+          </dtb:level1>
+        </dtb:bodymatter>
+        <dtb:rearmatter>
+          <dtb:level1>
+            <dtb:note id="fn1"><dtb:p>Nota a piè di pagina</dtb:p></dtb:note>
+          </dtb:level1>
+        </dtb:rearmatter>
+      </dtb:book>
+    </x:context>
+    <x:expect label="backlink text is 'Indietro' for Italian"
+              test="dtb:note/dtb:p[last()]/dtb:a = 'Indietro'"/>
+  </x:scenario>
+
+  <x:scenario label="note without a corresponding noteref anchor gets no backlink">
+    <x:context select="//dtb:note">
+      <dtb:book>
+        <dtb:bodymatter>
+          <dtb:level1>
+            <dtb:p>Text with no noteref</dtb:p>
+          </dtb:level1>
+        </dtb:bodymatter>
+        <dtb:rearmatter>
+          <dtb:level1>
+            <dtb:note id="fn1"><dtb:p>Orphan footnote</dtb:p></dtb:note>
+          </dtb:level1>
+        </dtb:rearmatter>
+      </dtb:book>
+    </x:context>
+    <x:expect label="note has an empty backlink href (no anchor found)"
+              test="dtb:note/dtb:p[last()]/dtb:a/@href = '#'"/>
+  </x:scenario>
+
+</x:description>

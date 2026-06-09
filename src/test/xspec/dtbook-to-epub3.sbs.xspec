@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the SBS post-processing XSLT override (DTBook → HTML).
+     Stylesheet does not exist yet — created in Phase 3. -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               xmlns:html="http://www.w3.org/1999/xhtml"
+               xmlns:epub="http://www.idpf.org/2007/ops"
+               stylesheet="../../main/resources/xml/xslt/dtbook-to-epub3.sbs.xsl">
+
+  <x:scenario label="dtbook:epigraph is rendered as html:blockquote" pending="Phase 3">
+    <x:context>
+      <dtb:epigraph>
+        <dtb:p>To be or not to be.</dtb:p>
+      </dtb:epigraph>
+    </x:context>
+    <x:expect label="output is a blockquote">
+      <html:blockquote>
+        <html:p>To be or not to be.</html:p>
+      </html:blockquote>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="dtbook:epigraph with blockquote child is rendered correctly" pending="Phase 3">
+    <x:context>
+      <dtb:epigraph>
+        <dtb:blockquote><dtb:p>Quote</dtb:p></dtb:blockquote>
+      </dtb:epigraph>
+    </x:context>
+    <x:expect label="output is a blockquote containing a blockquote">
+      <html:blockquote>
+        <html:blockquote><html:p>Quote</html:p></html:blockquote>
+      </html:blockquote>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="inline dtbook:prodnote is rendered as html:span" pending="Phase 3">
+    <x:context>
+      <dtb:p>Text <dtb:prodnote render="inline">note</dtb:prodnote> more</dtb:p>
+    </x:context>
+    <x:expect label="prodnote becomes a span">
+      <html:p>Text <html:span>note</html:span> more</html:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="dtbook:hd inside dtbook:list is retained" pending="Phase 3">
+    <x:context>
+      <dtb:list>
+        <dtb:hd>List heading</dtb:hd>
+        <dtb:li>Item</dtb:li>
+      </dtb:list>
+    </x:context>
+    <x:expect label="list heading is present in output" test="exists(//html:*[. = 'List heading'])"/>
+  </x:scenario>
+
+  <x:scenario label="fake frontmatter section is changed to div" pending="Phase 3">
+    <x:context>
+      <dtb:level1 class="frontmatter-placeholder">
+        <dtb:h1>Fake section</dtb:h1>
+      </dtb:level1>
+    </x:context>
+    <x:expect label="output element is a div, not a section"
+              test="exists(//html:div) and not(exists(//html:section))"/>
+  </x:scenario>
+
+  <x:scenario label="poem without a header is rendered as div" pending="Phase 3">
+    <x:context>
+      <dtb:poem>
+        <dtb:linegroup><dtb:line>A line</dtb:line></dtb:linegroup>
+      </dtb:poem>
+    </x:context>
+    <x:expect label="output is a div, not a section"
+              test="exists(//html:div) and not(exists(//html:section))"/>
+  </x:scenario>
+
+  <x:scenario label="caption is placed before the image" pending="Phase 3">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="photo"/>
+        <dtb:caption>A caption</dtb:caption>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="figcaption precedes img in output"
+              test="//html:figure/html:figcaption/following-sibling::html:img"/>
+  </x:scenario>
+
+  <x:scenario label="longdesc attribute is absent from output images" pending="Phase 3">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img id="img1" src="photo.jpg" alt="photo"/>
+        <dtb:prodnote imgref="img1">Description</dtb:prodnote>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="no longdesc attribute in output" test="not(//html:img/@longdesc)"/>
+  </x:scenario>
+
+</x:description>

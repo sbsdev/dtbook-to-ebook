@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the SBS OPF package document post-processing XSLT.
+     Stylesheet does not exist yet — created in Phase 3. -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:opf="http://www.idpf.org/2007/opf"
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:schema="http://schema.org/"
+               stylesheet="../../main/resources/xml/xslt/package-doc.sbs.xsl">
+
+  <x:scenario label="schema:accessMode and schema:accessibilityFeature meta elements are present" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata>
+          <dc:title>Test Book</dc:title>
+        </opf:metadata>
+      </opf:package>
+    </x:context>
+    <x:expect label="schema:accessMode meta is present"
+              test="exists(//opf:meta[@property='schema:accessMode'])"/>
+    <x:expect label="schema:accessibilityFeature meta is present"
+              test="exists(//opf:meta[@property='schema:accessibilityFeature'])"/>
+  </x:scenario>
+
+  <x:scenario label="schema:accessMode textual is always present" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
+        <opf:manifest/>
+      </opf:package>
+    </x:context>
+    <x:expect label="accessMode textual meta is present"
+              test="exists(//opf:meta[@property='schema:accessMode' and . = 'textual'])"/>
+  </x:scenario>
+
+  <x:scenario label="schema:accessMode visual is present only when images exist" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
+        <opf:manifest>
+          <opf:item media-type="image/jpeg" href="photo.jpg" id="img1"/>
+        </opf:manifest>
+      </opf:package>
+    </x:context>
+    <x:expect label="accessMode visual meta is present"
+              test="exists(//opf:meta[@property='schema:accessMode' and . = 'visual'])"/>
+  </x:scenario>
+
+  <x:scenario label="schema:accessMode visual is absent when no images exist" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
+        <opf:manifest>
+          <opf:item media-type="application/xhtml+xml" href="content.xhtml" id="c1"/>
+        </opf:manifest>
+      </opf:package>
+    </x:context>
+    <x:expect label="accessMode visual meta is absent"
+              test="not(exists(//opf:meta[@property='schema:accessMode' and . = 'visual']))"/>
+  </x:scenario>
+
+  <x:scenario label="alternativeText accessibilityFeature is present only when images have alt text" pending="Phase 3">
+    <x:context>
+      <!-- Book with image that has alt text -->
+      <opf:package>
+        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
+      </opf:package>
+    </x:context>
+    <x:expect label="alternativeText meta is present"
+              test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'alternativeText'])"/>
+  </x:scenario>
+
+  <x:scenario label="accessModeSufficient values are correct" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
+        <opf:manifest/>
+      </opf:package>
+    </x:context>
+    <x:expect label="accessModeSufficient meta is present"
+              test="exists(//opf:meta[@property='schema:accessModeSufficient'])"/>
+  </x:scenario>
+
+  <x:scenario label="longDescription value is present in accessibilityFeature" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
+      </opf:package>
+    </x:context>
+    <x:expect label="longDescription accessibilityFeature meta is present"
+              test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'longDescription'])"/>
+  </x:scenario>
+
+  <x:scenario label="metadata values are in the content attribute" pending="Phase 3">
+    <x:context>
+      <opf:package>
+        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
+      </opf:package>
+    </x:context>
+    <x:expect label="accessMode meta uses content attribute, not text node"
+              test="exists(//opf:meta[@property='schema:accessMode']/@content)"/>
+  </x:scenario>
+
+</x:description>

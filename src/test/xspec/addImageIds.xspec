@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addImageIds.xsl">
+
+  <x:scenario label="img without id receives a generated id">
+    <x:context>
+      <dtb:img src="photo.jpg" alt="a photo"/>
+    </x:context>
+    <x:expect label="id attribute is present" test="exists(dtb:img/@id)"/>
+    <x:expect label="id attribute is non-empty" test="dtb:img/@id != ''"/>
+  </x:scenario>
+
+  <x:scenario label="img with existing id is not modified">
+    <x:context>
+      <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+    </x:context>
+    <x:expect label="original id is preserved">
+      <dtb:img id="img1" src="photo.jpg" alt="a photo"/>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="two imgs without ids each get a distinct id">
+    <x:context>
+      <dtb:imggroup>
+        <dtb:img src="a.jpg" alt="first"/>
+        <dtb:img src="b.jpg" alt="second"/>
+      </dtb:imggroup>
+    </x:context>
+    <x:expect label="both imgs have an id" test="count(//dtb:img[@id]) = 2"/>
+    <x:expect label="ids are distinct" test="//dtb:img[1]/@id != //dtb:img[2]/@id"/>
+  </x:scenario>
+
+  <x:scenario label="non-img elements are copied unchanged">
+    <x:context>
+      <dtb:p>text</dtb:p>
+    </x:context>
+    <x:expect label="paragraph is unchanged">
+      <dtb:p>text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+</x:description>

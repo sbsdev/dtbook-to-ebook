@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               xmlns:brl="http://www.daisy.org/z3986/2009/braille/"
+               stylesheet="../../main/resources/xml/xslt/filterBrlContractionhints.xsl">
+
+  <x:scenario label="brl:* inline elements are stripped but text content is retained">
+    <x:context>
+      <dtb:p><brl:emph>important</brl:emph> text</dtb:p>
+    </x:context>
+    <x:expect label="brl:emph is removed, text content retained">
+      <dtb:p>important text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="brl:running-line is removed without retaining content">
+    <x:context>
+      <dtb:p><brl:running-line>header</brl:running-line>text</dtb:p>
+    </x:context>
+    <x:expect label="brl:running-line and its content are gone">
+      <dtb:p>text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="brl:toc-line is removed without retaining content">
+    <x:context>
+      <dtb:p><brl:toc-line>toc entry</brl:toc-line>text</dtb:p>
+    </x:context>
+    <x:expect label="brl:toc-line and its content are gone">
+      <dtb:p>text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="brl:when-braille is removed without retaining content">
+    <x:context>
+      <dtb:p><brl:when-braille>braille-only</brl:when-braille>text</dtb:p>
+    </x:context>
+    <x:expect label="brl:when-braille and its content are gone">
+      <dtb:p>text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="brl:* attributes are removed">
+    <x:context>
+      <dtb:p brl:grade="1">text</dtb:p>
+    </x:context>
+    <x:expect label="brl:grade attribute is absent">
+      <dtb:p>text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="dtbook version is normalised from SBS-extended to standard">
+    <x:context>
+      <dtb:dtbook version="2005-3-sbs-full"/>
+    </x:context>
+    <x:expect label="version is 2005-3">
+      <dtb:dtbook version="2005-3"/>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="non-brl elements pass through unchanged">
+    <x:context>
+      <dtb:p class="x">content</dtb:p>
+    </x:context>
+    <x:expect label="element is unchanged">
+      <dtb:p class="x">content</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+</x:description>

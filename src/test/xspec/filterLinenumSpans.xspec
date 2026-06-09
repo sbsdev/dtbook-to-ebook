@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/filterLinenumSpans.xsl">
+
+  <x:scenario label="linenum span is removed">
+    <x:context>
+      <dtb:p>Text <dtb:span class="linenum">42</dtb:span> more text</dtb:p>
+    </x:context>
+    <x:expect label="span element is gone, surrounding text is retained">
+      <dtb:p>Text  more text</dtb:p>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="span with other class is preserved">
+    <x:context>
+      <dtb:span class="other">content</dtb:span>
+    </x:context>
+    <x:expect label="span is retained unchanged">
+      <dtb:span class="other">content</dtb:span>
+    </x:expect>
+  </x:scenario>
+
+  <x:scenario label="span without class is preserved">
+    <x:context>
+      <dtb:span>content</dtb:span>
+    </x:context>
+    <x:expect label="span is retained unchanged">
+      <dtb:span>content</dtb:span>
+    </x:expect>
+  </x:scenario>
+
+</x:description>
