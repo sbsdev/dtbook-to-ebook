@@ -1,0 +1,112 @@
+#+title: Implementation Plan
+#+author: Christian Egli
+#+language: en
+
+Detailed implementation guidance for the SBS DTBook-to-EPUB3 converter.
+The high-level decision and 7-step sequence are in
+[[file:Architecture_Decision_Records.org][Architecture_Decision_Records.org]]; the requirements are in [[file:Requirements.org][Requirements.org]].
+
+* XSpec test strategy
+
+One ~.xspec~ file per preprocessing XSLT, each testing the transform in
+isolation (DTBook in, DTBook out):
+
+| XSpec file                              | What to cover                                                         |
+|-----------------------------------------+-----------------------------------------------------------------------|
+| ~addBoilerplate.xspec~                  | copyright text present; i18n selects correct language                 |
+| ~addImageDescriptionBoilerplate.xspec~  | boilerplate injected exactly once per ~imggroup~ with ~prodnote~      |
+| ~addImageIds.xspec~                     | every ~img~ gets a stable id                                          |
+| ~addImageRefs.xspec~                    | ~imgref~ inserted; ~aria-describedby~ wired; ~longdesc~ absent        |
+| ~addFootnoteAnchor.xspec~               | anchor appears before each noteref                                    |
+| ~addFootnoteBacklinks.xspec~            | each footnote gets a link back to its noteref                         |
+| ~moveFootnotesToRear.xspec~             | all footnotes end up in the last rearmatter level                     |
+| ~filterBrlContractionhints.xspec~       | ~brl:*~ hints removed                                                 |
+| ~filterLinenumSpans.xspec~              | linenum spans removed                                                 |
+
+Additionally, test the XSLT overrides applied as post-processing:
+
+| XSpec file                  | What to cover                                                                                                                                        |
+|-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ~dtbook-to-epub3.sbs.xspec~ | epigraph → blockquote; prodnote → span; list ~hd~ retained; fake frontmatter → div; poems without ~hd~ → div; caption before image; no ~longdesc~ |
+| ~package-doc.sbs.xspec~     | ~accessMode~/~accessibilityFeature~ present; ~alternativeText~ conditional on images-with-alt; ~accessModeSufficient~ values correct                 |
+
+** Wiring into Maven
+
+Place ~.xspec~ files under ~src/test/xspec/~. The ~xspec-maven-plugin~
+(already in the build tree at ~utils/xspec-maven-plugin~) picks them up
+automatically and runs them on ~mvn test~.
+
+* Regression test driver (~compare-epub.bb~)
+
+A Babashka script modelled on ~dp2/scripts/compare-braille.bb~ that
+compares EPUB output between two Pipeline instances (production vs. test).
+
+** Config (~compare-epub-config.edn~)
+
+#+begin_src clojure
+{:prod-url   "https://pipeline.prod.example.com"
+ :test-url   "https://pipeline.test.example.com"
+ :token      "Token <your-jwt-token>"
+ :output-dir "/tmp/epub-cmp"   ; optional
+ :limit      100}              ; optional
+#+end_src
+
+** Comparison approach
+
+EPUB files contain timestamps and auto-generated IDs, so comparison
+must be structural, not byte-for-byte. For each document pair:
+
+1. Unzip both EPUBs.
+2. Normalise each ~*.xhtml~ file: strip whitespace differences and
+   auto-generated ~xml:id~ attributes, then compare serialised XML.
+3. Compare ~content.opf~: metadata elements and spine; ignore ~dc:date~
+   and ~dcterms:modified~.
+4. Compare ~nav.xhtml~ / ~toc.ncx~: navigation structure only.
+5. Check presence (not content) of ~accessibility.css~.
+6. On mismatch: save a ~diff --unified~ patch to the output directory.
+
+** Comparison dimensions
+
+| Dimension                           | Pass condition                                                     |
+|-------------------------------------+--------------------------------------------------------------------|
+| All XHTML files present             | same filenames in ~META-INF/container.xml~ spine                   |
+| XHTML structure                     | same elements and text after normalisation                         |
+| OPF metadata                        | same ~<meta>~ elements (excluding ~dcterms:modified~)              |
+| Footnotes in rearmatter             | ~epub:type="rearnotes"~ section exists when source has footnotes   |
+| Caption order                       | ~<figure>~ contains ~<figcaption>~ before ~<img>~                  |
+| ~aria-describedby~ wired            | every ~<img>~ with a prodnote has the attribute                    |
+| No ~longdesc~                       | attribute absent from all ~<img>~ tags                             |
+| Accessibility metadata              | ~schema:accessMode~ and ~schema:accessibilityFeature~ in OPF       |
+| Boilerplate                         | first ~<section>~ contains expected copyright text                 |
+
+Document selection: find the most recent N documents on the production
+server that have an EPUB product. 100 documents gives good coverage.
+
+* Development sequence
+
+** Phase 1 — Specification
+- Write acceptance criteria as XSpec scenarios (failing)
+- Commit XSpec files to this repo
+
+** Phase 2 — Skeleton module
+- Create pom.xml pointing at latest DAISY Pipeline
+- Copy 14 preprocessing XSLTs verbatim; run XSpec → most pass
+- Wire standard dtbook-to-epub3.xpl as base step in sbs-dtbook-to-epub3.xpl
+
+** Phase 3 — Port XSLT overrides
+- Port SBS overrides (epigraph, prodnote-as-span, caption order,
+  namespace cleanup, OPF metadata) as post-processing steps
+- XSpec → all pass
+
+** Phase 4 — Integration test
+- Add one end-to-end Maven integration test: real DTBook fixture,
+  assert on EPUB content
+
+** Phase 5 — Regression run
+- Run compare-epub.bb against 100 production books
+- Fix discrepancies until 100/100 pass
+
+** Phase 6 — Assembly integration
+- Add this module as Maven dependency in pipeline assembly pom.xml
+- Remove old epub3-dtbook-migrator subrepo
+- Deploy to test instance; repeat regression run

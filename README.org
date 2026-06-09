@@ -10,6 +10,8 @@ accessibility metadata layered on top as a thin wrapper module.
 
 See [[file:doc/Architecture_Decision_Records.org][doc/Architecture_Decision_Records.org]] for the background and the
 decision to replace the old Nordic migrator fork with this module.
+See [[file:doc/Plan.org][doc/Plan.org]] for the XSpec test strategy, regression test design,
+and phased development sequence.
 
 * Requirements
 
