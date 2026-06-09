@@ -5,46 +5,72 @@
 Requirements for the SBS DTBook-to-EPUB3 converter. Each requirement
 must be covered by an XSpec test.
 
+Commit references point to the old [[https://github.com/sbsdev/pipeline][sbsdev/pipeline]] repository where
+each requirement was originally implemented.
+
 * CSS / Visual appearance
-- No hard-coded font size
-- Line-height as a factor, not a percentage
-- Image width 60%
-- Block-display class for images following captions
-- ~list-style-type~ for ~ol~ and ~ul~
+
+| Requirement                                   | Commit  | Implementation                          |
+|-----------------------------------------------+---------+-----------------------------------------|
+| No hard-coded font size                       | —       | ~accessibility.css~                     |
+| Line-height as a factor, not a percentage     | —       | ~accessibility.css~                     |
+| Image width 60%                               | —       | ~accessibility.css~                     |
+| Block-display class for images after captions | [[https://github.com/sbsdev/pipeline/commit/14346e2e9ce5cfb189366249008b65abdf2cb39e][14346e2]] | ~accessibility.css~, ~addImageRefs.xsl~ |
+| ~list-style-type~ for ~ol~ and ~ul~           | [[https://github.com/sbsdev/pipeline/commit/d38121499523ed67a4dffda54a1b546c2a54ce0a][d381214]] | ~accessibility.css~                     |
 
 * Boilerplate text
-- Copyright, usage restrictions, and producer information in frontmatter
-- Boilerplate text for extended image descriptions
+
+| Requirement                                      | Commit  | Implementation                           |
+|--------------------------------------------------+---------+------------------------------------------|
+| Copyright, usage restrictions, producer info     | —       | ~addBoilerplate.xsl~, ~translations.xml~ |
+| Boilerplate text for extended image descriptions | [[https://github.com/sbsdev/pipeline/commit/c1f3fc2ca116059693085590ea94bf2e92ee368a][c1f3fc2]] | ~addImageDescriptionBoilerplate.xsl~     |
 
 * Content structure
-- UTF-8 output; no ASCII encoding
-- No dyslexic font
-- Clean namespace handling in package document
-- Inline prodnotes rendered as ~<span>~
-- Retain ~dtbook:hd~ inside ~dtbook:list~
-- ~dtbook:epigraph~ rendered as ~<blockquote>~ (both ~blockquote~ and ~p~ children)
-- Fake frontmatter sections changed to ~<div>~
-- Poems without a header rendered as ~<div>~
+
+| Requirement                                                | Commit           | Implementation                 |
+|------------------------------------------------------------+------------------+--------------------------------|
+| UTF-8 output; no ASCII encoding                            | [[https://github.com/sbsdev/pipeline/commit/6f7dcb5e073080e21dc062ee1ae33a175d85623e][6f7dcb5]]          | standard converter step option |
+| No dyslexic font                                           | —                | CSS override                   |
+| Clean namespace handling in package document               | [[https://github.com/sbsdev/pipeline/commit/c565281043b699123fe35a560b6bb11ea369fdf2][c565281]]          | XSLT override                  |
+| Inline prodnotes rendered as ~<span>~                      | —                | XSLT override                  |
+| Retain ~dtbook:hd~ inside ~dtbook:list~                    | [[https://github.com/sbsdev/pipeline/commit/4f548adac14cedf6be06c94cafbed8443e921f6f][4f548ad]]          | XSLT override                  |
+| ~dtbook:epigraph~ → ~<blockquote>~ (~blockquote~ and ~p~) | [[https://github.com/sbsdev/pipeline/commit/376e6dd88131dbed9071ca93f0435be76b2f3542][376e6dd]], [[https://github.com/sbsdev/pipeline/commit/8079ef4c458ed1d98e6f02dcd0c7a388557ddbc7][8079ef4]] | XSLT override                  |
+| Fake frontmatter sections changed to ~<div>~               | [[https://github.com/sbsdev/pipeline/commit/ce31babca039a3cbad19ab3850381aac6feb6b0c][ce31bab]]          | XSLT override                  |
+| Poems without a header rendered as ~<div>~                 | [[https://github.com/sbsdev/pipeline/commit/996b390b7e281d84b35bfb74e1a62c8eb94933f1][996b390]]          | XSLT override                  |
+| Use ~substring-before~ to get the marker text              | [[https://github.com/sbsdev/pipeline/commit/2f2e1e7a2af03c623175711a4a68fd98900f35b2][2f2e1e7]]          | XSLT override                  |
 
 * Image and caption handling
-- Caption placed before the image
-- No ~longdesc~ attribute; use ~aria-describedby~ instead
-- ~imgref~ inserted automatically for image/prodnote groups
-- Boilerplate text for extended image descriptions
+
+| Requirement                                               | Commit           | Implementation                       |
+|-----------------------------------------------------------+------------------+--------------------------------------|
+| Caption placed before the image                           | [[https://github.com/sbsdev/pipeline/commit/c3709bcf340d6216349fabc00cce9e137cb37c71][c3709bc]]          | XSLT override                        |
+| No ~longdesc~; use ~aria-describedby~ instead             | [[https://github.com/sbsdev/pipeline/commit/4d8d66f85edeaf396c8684a825fd4f91d356d34d][4d8d66f]], [[https://github.com/sbsdev/pipeline/commit/27abc8a7583bb3f01ddab230c45f4d923df6f19f][27abc8a]] | ~addImageRefs.xsl~                   |
+| ~imgref~ inserted automatically for image/prodnote groups | [[https://github.com/sbsdev/pipeline/commit/b3826a3ffd1e3524ad44e6a3e21e331d990fbc5f][b3826a3]]          | ~addImageRefs.xsl~                   |
+| Boilerplate text for extended image descriptions          | [[https://github.com/sbsdev/pipeline/commit/c1f3fc2ca116059693085590ea94bf2e92ee368a][c1f3fc2]]          | ~addImageDescriptionBoilerplate.xsl~ |
+
+The ~imgref~ rule assumes every image lives in its own ~imggroup~ together
+with its ~prodnote~, so ~imgref~ can be inserted unconditionally.
 
 * Accessibility metadata (OPF)
-- ~schema:accessMode~ and ~schema:accessibilityFeature~ present
-- ~alternativeText~ metadata only when images have alt text
-- ~schema:accessMode textual~ always; ~visual~ only when images are present
-- Correct ~accessModeSufficient~ values
-- ~longDescription~ value in ~accessibilityFeature~
-- Metadata value in ~content~ attribute
+
+| Requirement                                                    | Commit  | Implementation              |
+|----------------------------------------------------------------+---------+-----------------------------|
+| ~schema:accessMode~ and ~schema:accessibilityFeature~          | [[https://github.com/sbsdev/pipeline/commit/9bd9881a19b1cd9dc1df2ee6e3715b1bbb5a9d7f][9bd9881]] | package document XSLT       |
+| ~alternativeText~ only when images have alt text               | [[https://github.com/sbsdev/pipeline/commit/6874de14168d294372a34611135f226f14f290e2][6874de1]] | conditional in package XSLT |
+| ~accessMode textual~ always; ~visual~ only when images present | [[https://github.com/sbsdev/pipeline/commit/5d85e9430b84703b293c07ce56b85f3a403e4744][5d85e94]] | package document XSLT       |
+| Correct ~accessModeSufficient~ values                          | [[https://github.com/sbsdev/pipeline/commit/80fe53ba14368f86eb2c00d025f9b275158e5e85][80fe53b]] | package document XSLT       |
+| ~longDescription~ value in ~accessibilityFeature~              | [[https://github.com/sbsdev/pipeline/commit/0a12308fc71bb5b62bccabc87f0ea1c85c50d8a7][0a12308]] | package document XSLT       |
+| Metadata value in ~content~ attribute                          | [[https://github.com/sbsdev/pipeline/commit/5b7f102c1430f39668a73e38ec0f589f5706ac3c][5b7f102]] | package document XSLT       |
 
 * Navigation
-- Footnotes moved to rearmatter
-- Anchor inserted before each noteref
-- Backlink from each footnote to its noteref
-- Rearmatter footnote chapter only added when footnotes exist
+
+| Requirement                                                 | Commit  | Implementation             |
+|-------------------------------------------------------------+---------+----------------------------|
+| Footnotes moved to rearmatter                               | [[https://github.com/sbsdev/pipeline/commit/6d13f324a51d21cd29d3dab522e5d73b83e3bcb2][6d13f32]] | ~moveFootnotesToRear.xsl~  |
+| Anchor inserted before each noteref                         | [[https://github.com/sbsdev/pipeline/commit/c6fe8c3b67ca3bfaadbbe0f3855c4fc706a68088][c6fe8c3]] | ~addFootnoteAnchor.xsl~    |
+| Backlink from each footnote to its noteref                  | [[https://github.com/sbsdev/pipeline/commit/488aa88fcee2e818a7bbf8c81daca7d1cac0edc6][488aa88]] | ~addFootnoteBacklinks.xsl~ |
+| Rearmatter footnote chapter only added when footnotes exist | —       | XProc conditional          |
 
 * Language support
-- i18n for boilerplate text (currently Italian and Sursilvan)
+
+- i18n for boilerplate text (currently Italian and Sursilvan) via ~translations.xml~
