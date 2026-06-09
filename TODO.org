@@ -1,0 +1,23 @@
+#+title: Open Questions and TODOs
+
+* Clarify i18n.xsl / Saxon version situation with Pipeline devs
+
+~common-utils~ provides ~i18n.xsl~ as an XSLT 3.0 stylesheet (uses
+~xsl:try~ and a Java extension ~NormalizeLang~). The ~xspec-maven-plugin~
+(version 1.0.0) bundles ~Saxon-HE 9.5.1~, which predates XSLT 3.0
+support. ~common-utils~ itself works around this by disabling XSpec
+entirely (~<phase>none</phase>~ in its POM).
+
+To test the four preprocessing XSLTs that import ~i18n.xsl~
+(~addBoilerplate.xsl~, ~addFootnoteBacklinks.xsl~,
+~addImageDescriptionBoilerplate.xsl~, ~moveFootnotesToRear.xsl~), we
+placed an XSLT 2.0 mock of ~i18n.xsl~ in ~src/test/xspec/catalog.xml~.
+
+Questions to raise with the Pipeline developers:
+
+- Is there an officially supported way to test XSLTs that import
+  ~i18n.xsl~ with XSpec?
+- Should ~xspec-runner~ be upgraded to a version bundling Saxon 9.8+
+  (which supports XSLT 3.0)?
+- Is the XSLT 2.0 mock approach (via test catalog) the expected pattern
+  for downstream modules, or is there a better alternative?
