@@ -19,7 +19,7 @@
     <x:expect label="frontmatter now has two level1 elements"
               test="count(//dtb:frontmatter/dtb:level1) = 2"/>
     <x:expect label="boilerplate level1 comes before titlepage"
-              test="//dtb:frontmatter/dtb:level1[1]/@class != 'titlepage'"/>
+              test="not(//dtb:frontmatter/dtb:level1[1]/@class = 'titlepage')"/>
     <x:expect label="boilerplate heading is 'Zu diesem Buch'"
               test="//dtb:frontmatter/dtb:level1[1]/dtb:h1 = 'Zu diesem Buch'"/>
     <x:expect label="boilerplate contains copyright text"
@@ -76,7 +76,7 @@
     <x:expect label="there are three level1 elements (boilerplate + other + titlepage)"
               test="count(//dtb:frontmatter/dtb:level1) = 3"/>
     <x:expect label="boilerplate is before the titlepage, not before the other section"
-              test="//dtb:frontmatter/dtb:level1[2]/@class = 'other'"/>
+              test="//dtb:frontmatter/dtb:level1[1]/@class = 'other'"/>
   </x:scenario>
 
 </x:description>

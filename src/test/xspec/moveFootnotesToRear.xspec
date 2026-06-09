@@ -74,7 +74,7 @@
       </dtb:book>
     </x:context>
     <x:expect label="footnote chapter heading is Italian"
-              test="//dtb:rearmatter/dtb:level1/dtb:h1 = 'Nota a pie&apos; di pagina'"/>
+              test='//dtb:rearmatter/dtb:level1/dtb:h1 = "Nota a pie&apos; di pagina"'/>
   </x:scenario>
 
 </x:description>

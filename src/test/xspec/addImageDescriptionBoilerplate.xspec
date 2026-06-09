@@ -12,7 +12,7 @@
       </dtb:imggroup>
     </x:context>
     <x:expect label="prodnote first child is a paragraph"
-              test="//dtb:prodnote/dtb:p[1]"/>
+              test="exists(//dtb:prodnote/dtb:p[1])"/>
     <x:expect label="boilerplate paragraph text is 'Bildbeschreibung:'"
               test="//dtb:prodnote/dtb:p[1] = 'Bildbeschreibung:'"/>
     <x:expect label="original description text is still present"
@@ -53,7 +53,7 @@
       </dtb:imggroup>
     </x:context>
     <x:expect label="boilerplate paragraph text is Italian"
-              test="//dtb:prodnote/dtb:p[1] = 'Descrizione dell&apos;immagine:'"/>
+              test='//dtb:prodnote/dtb:p[1] = "Descrizione dell&apos;immagine:"'/>
   </x:scenario>
 
 </x:description>

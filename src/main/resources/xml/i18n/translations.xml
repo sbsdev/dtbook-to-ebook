@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n xmlns="http://www.daisy.org/ns/pipeline/data">
+    <translation string="Bibliographische Angaben">
+        <text xml:lang="de">Bibliographische Angaben</text>
+        <text xml:lang="de-CH">Bibliographische Angaben</text>
+        <text xml:lang="de-DE">Bibliographische Angaben</text>
+        <text xml:lang="it">Informazioni bibliografiche</text>
+        <text xml:lang="rm-sursilv">Indicaziuns bibliograficas</text>
+    </translation>
+    <translation string="header">
+        <text xml:lang="de">Vorspann</text>
+        <text xml:lang="de-CH">Vorspann</text>
+        <text xml:lang="de-DE">Vorspann</text>
+        <text xml:lang="it">Titoli di testa</text>
+        <text xml:lang="rm-sursilv">Informaziuns preliminaras</text>
+    </translation>
+    <translation string="trailer">
+        <text xml:lang="de">Nachspann</text>
+        <text xml:lang="de-CH">Nachspann</text>
+        <text xml:lang="de-DE">Nachspann</text>
+        <text xml:lang="it">Titoli di coda</text>
+        <text xml:lang="rm-sursilv">Appendix</text>
+    </translation>
+    <translation string="original-without-numbering">
+        <text xml:lang="de">Im Original ohne Nummerierung</text>
+        <text xml:lang="de-CH">Im Original ohne Nummerierung</text>
+        <text xml:lang="de-DE">Im Original ohne Nummerierung</text>
+        <text xml:lang="it">Nell'originale senza numerazione</text>
+        <text xml:lang="rm-sursilv">Egl original senza numeraziun</text>
+    </translation>
+    <translation string="without-heading">
+        <text xml:lang="de">Ohne Überschrift</text>
+        <text xml:lang="de-CH">Ohne Überschrift</text>
+        <text xml:lang="de-DE">Ohne Überschrift</text>
+        <text xml:lang="it">Senza Titolo</text>
+        <text xml:lang="rm-sursilv">Senza tetel</text>
+    </translation>
+    <translation string="back">
+        <text xml:lang="de">Zurück</text>
+        <text xml:lang="de-CH">Zurück</text>
+        <text xml:lang="de-DE">Zurück</text>
+        <text xml:lang="it">Indietro</text>
+        <text xml:lang="rm-sursilv">Anavos</text>
+    </translation>
+    <translation string="image-description">
+        <text xml:lang="de">Bildbeschreibung</text>
+        <text xml:lang="de-CH">Bildbeschreibung</text>
+        <text xml:lang="de-DE">Bildbeschreibung</text>
+        <text xml:lang="it">Descrizione dell'immagine</text>
+        <text xml:lang="rm-sursilv">Descripziun dil maletg</text>
+    </translation>
+    <translation string="footnotes">
+        <text xml:lang="de">Fussnoten</text>
+        <text xml:lang="de-CH">Fussnoten</text>
+        <text xml:lang="de-DE">Fussnoten</text>
+        <text xml:lang="it">Nota a pie' di pagina</text>
+        <text xml:lang="rm-sursilv">Annotaziun</text>
+    </translation>
+    <translation string="about-book">
+        <text xml:lang="de">Zu diesem Buch</text>
+        <text xml:lang="de-CH">Zu diesem Buch</text>
+        <text xml:lang="de-DE">Zu diesem Buch</text>
+        <text xml:lang="it">In questo libro</text>
+        <text xml:lang="rm-sursilv">Davart quei cudisch</text>
+    </translation>
+    <translation string="electronic-data-thanks">
+        <text xml:lang="de">Wir danken dem Verlag für die freundliche Bereitstellung der elektronischen Textdaten.</text>
+        <text xml:lang="de-CH">Wir danken dem Verlag für die freundliche Bereitstellung der elektronischen Textdaten.</text>
+        <text xml:lang="de-DE">Wir danken dem Verlag für die freundliche Bereitstellung der elektronischen Textdaten.</text>
+        <text xml:lang="it">Ringraziamo l'editore per i dati dei testi elettronici.</text>
+        <text xml:lang="rm-sursilv">Nus engraziein alla casa editura ch'ella metta a disposiziun las datas electronicas.</text>
+    </translation>
+    <translation string="producer">
+        <text xml:lang="de">SBS Schweizerische Bibliothek für Blinde, Seh- und Lesebehinderte, Zürich</text>
+        <text xml:lang="de-CH">SBS Schweizerische Bibliothek für Blinde, Seh- und Lesebehinderte, Zürich</text>
+        <text xml:lang="de-DE">SBS Schweizerische Bibliothek für Blinde, Seh- und Lesebehinderte, Zürich</text>
+        <text xml:lang="it">Unitas - Associazione ciechi e ipovedenti della Svizzera italiana</text>
+        <text xml:lang="rm-sursilv">SBS Biblioteca svizra per carstgauns tschocs, per carstgauns impedi dalla vesida e per persunas che han difficultads da leger, Turitg</text>
+    </translation>
+    <translation string="producer-brief">
+        <text xml:lang="de">SBS</text>
+        <text xml:lang="de-CH">SBS</text>
+        <text xml:lang="de-DE">SBS</text>
+        <text xml:lang="it">Unitas</text>
+        <text xml:lang="rm-sursilv">SBS</text>
+    </translation>
+    <translation string="producer-url">
+        <text xml:lang="de">http://www.sbs.ch</text>
+        <text xml:lang="de-CH">http://www.sbs.ch</text>
+        <text xml:lang="de-DE">http://www.sbs.ch</text>
+        <text xml:lang="it">http://www.unitas.ch</text>
+        <text xml:lang="rm-sursilv">http://www.sbs.ch</text>
+    </translation>
+    <translation string="producer-url-brief">
+        <text xml:lang="de">www.sbs.ch</text>
+        <text xml:lang="de-CH">www.sbs.ch</text>
+        <text xml:lang="de-DE">www.sbs.ch</text>
+        <text xml:lang="it">www.unitas.ch</text>
+        <text xml:lang="rm-sursilv">www.sbs.ch</text>
+    </translation>
+    <translation string="production">
+        <text xml:lang="de">Herstellung</text>
+        <text xml:lang="de-CH">Herstellung</text>
+        <text xml:lang="de-DE">Herstellung</text>
+        <text xml:lang="it">Produzione</text>
+        <text xml:lang="rm-sursilv">Producziun</text>
+    </translation>
+    <translation string="copyright-text">
+        <text xml:lang="de">Dieses E-Book im EPUB-Format ist die ausschliesslich für die Nutzung durch seh- und lesebehinderte Menschen bestimmte zugängliche Version eines urheberrechtlich geschützten Werks. Sie können es im Rahmen des Urheberrechts persönlich nutzen, dürfen es aber nicht weiter verbreiten oder öffentlich zugänglich machen.</text>
+        <text xml:lang="de-CH">Dieses E-Book im EPUB-Format ist die ausschliesslich für die Nutzung durch seh- und lesebehinderte Menschen bestimmte zugängliche Version eines urheberrechtlich geschützten Werks. Sie können es im Rahmen des Urheberrechts persönlich nutzen, dürfen es aber nicht weiter verbreiten oder öffentlich zugänglich machen.</text>
+        <text xml:lang="de-DE">Dieses E-Book im EPUB-Format ist die ausschliesslich für die Nutzung durch seh- und lesebehinderte Menschen bestimmte zugängliche Version eines urheberrechtlich geschützten Werks. Sie können es im Rahmen des Urheberrechts persönlich nutzen, dürfen es aber nicht weiter verbreiten oder öffentlich zugänglich machen.</text>
+        <text xml:lang="it">Questo e-book in formato EPUB è la versione accessibile di un'opera protetta da copyright destinata esclusivamente all'uso da parte di persone con disabilità visive e di lettura. Puoi usarlo personalmente ai sensi della legge sul copyright, ma non puoi ridistribuirlo o renderlo pubblicamente disponibile.</text>
+        <text xml:lang="rm-sursilv">Quei e-book el format EPUB ei la versiun d'ina ovra protegida cun ils dretgs d'autur destinada exclusivamein per il diever entras carstgauns impedi dalla vesida e persunas che han difficultads da leger. El rom dil dretg d'autur saveis Vus duvrar persunalmein igl e-book, astgeis denton buca derasar el ni render accessibel el publicamein.</text>
+    </translation>
+</i18n>
