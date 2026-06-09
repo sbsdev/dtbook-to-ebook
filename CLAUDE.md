@@ -35,7 +35,7 @@ The SBS delta is composed of:
 
 The main XProc entry point (`sbs-dtbook-to-epub3.xpl`) calls the upstream `dtbook-to-epub3.xpl` as a sub-step. The standard pipeline converts DTBook → ZEDAI → HTML → EPUB3.
 
-Every SBS requirement in `doc/requirements.org` must be covered by an XSpec test.
+Every SBS requirement in `doc/Requirements.org` must be covered by an XSpec test.
 
 ## Implementation plan (from ADR)
 
@@ -50,7 +50,7 @@ Every SBS requirement in `doc/requirements.org` must be covered by an XSpec test
 ## Key documentation
 
 - `doc/Architecture_Decision_Records.org` — why this approach was chosen over maintaining the fork
-- `doc/requirements.org` — full list of SBS-specific requirements (CSS, boilerplate, content structure, images/captions, OPF accessibility metadata, navigation, i18n)
+- `doc/Requirements.org` — full list of SBS-specific requirements (CSS, boilerplate, content structure, images/captions, OPF accessibility metadata, navigation, i18n)
 
 ## Regression testing
 

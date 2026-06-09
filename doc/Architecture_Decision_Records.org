@@ -119,11 +119,11 @@ dependency.
 
 ** SBS Requirements
 
-The full requirements are maintained in [[file:requirements.org][doc/requirements.org]].
+The full requirements are maintained in [[file:Requirements.org][doc/Requirements.org]].
 
 ** Implementation Plan
 
-1. Write XSpec tests for every requirement in [[file:requirements.org][doc/requirements.org]] (failing).
+1. Write XSpec tests for every requirement in [[file:Requirements.org][doc/Requirements.org]] (failing).
 2. Copy the 14 preprocessing XSLTs from the old module verbatim; run
    XSpec — most pass immediately.
 3. Wire the standard ~dtbook-to-epub3.xpl~ as the base step in a new
