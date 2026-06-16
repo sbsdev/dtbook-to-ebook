@@ -2,10 +2,12 @@
 <x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
                xmlns:sbs="http://www.sbs.ch/pipeline"
                xmlns:c="http://www.w3.org/ns/xproc-step"
-               script="../../main/resources/xml/xproc/dtbook-to-ebook.xpl">
+               xmlns:opf="http://www.idpf.org/2007/opf"
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               script="dtbook-to-ebook-test-wrapper.xpl">
 
     <x:scenario label="convert a minimal DTBook to EPUB3">
-        <x:call step="sbs:dtbook-to-ebook">
+        <x:call step="sbs:dtbook-to-ebook-test-wrapper">
             <x:input port="source">
                 <x:document type="inline" xml:base="minimal.xml">
                     <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/"
@@ -33,11 +35,23 @@
             <x:option name="output-dir" select="concat($temp-dir,'output/')"/>
             <x:option name="temp-dir" select="concat($temp-dir,'temp/')"/>
         </x:call>
+
         <x:context label="the output directory">
             <x:document type="directory" base-uri="temp-dir" href="output/"/>
         </x:context>
         <x:expect label="the output directory contains an EPUB file"
                   type="xpath" test="exists(/c:directory/c:file[ends-with(@name, '.epub')])"/>
+
+        <x:context label="the package document">
+            <x:document type="port" port="result"/>
+        </x:context>
+        <x:expect label="the package document has the correct title"
+                  type="xpath" test="/opf:package/opf:metadata/dc:title = 'Minimal DTBook'"/>
+        <x:expect label="the package document has the correct language"
+                  type="xpath" test="/opf:package/@xml:lang = 'de'"/>
+        <x:expect label="the package document declares an accessibility access mode"
+                  type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessMode'])"/>
+
     </x:scenario>
 
 </x:description>
