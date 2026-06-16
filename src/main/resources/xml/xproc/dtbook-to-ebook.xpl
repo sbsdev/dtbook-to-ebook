@@ -3,8 +3,8 @@
     xmlns:p="http://www.w3.org/ns/xproc"
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:sbs="http://www.sbs.ch/pipeline"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
+    xmlns:c="http://www.w3.org/ns/xproc-step"
     exclude-inline-prefixes="#all"
     type="sbs:dtbook-to-ebook" name="main" version="1.0">
 
@@ -43,10 +43,51 @@
     </p:output>
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-epub3/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/epub-utils/library.xpl"/>
+
+    <!-- Derive EPUB output name from the source document's filename (prologue variable) -->
+    <p:variable name="output-name"
+        select="replace(replace(base-uri(/), '^.*/([^/]+)$', '$1'), '\.[^.]*$', '')"/>
+
+    <!-- ===================== -->
+    <!-- Build source fileset  -->
+    <!-- ===================== -->
+
+    <p:identity name="dtbook-source"/>
+
+    <p:xslt name="make-fileset">
+        <p:input port="source"><p:pipe step="dtbook-source" port="result"/></p:input>
+        <p:input port="parameters"><p:empty/></p:input>
+        <p:input port="stylesheet">
+            <p:inline>
+                <xsl:stylesheet version="2.0"
+                    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                    xmlns:d="http://www.daisy.org/ns/pipeline/data">
+                    <xsl:template match="/">
+                        <d:fileset>
+                            <xsl:attribute name="xml:base">
+                                <xsl:value-of select="replace(base-uri(.), '[^/]+$', '')"/>
+                            </xsl:attribute>
+                            <d:file media-type="application/x-dtbook+xml">
+                                <xsl:attribute name="href">
+                                    <xsl:value-of select="replace(base-uri(.), '^.*/([^/]+)$', '$1')"/>
+                                </xsl:attribute>
+                            </d:file>
+                        </d:fileset>
+                    </xsl:template>
+                </xsl:stylesheet>
+            </p:inline>
+        </p:input>
+    </p:xslt>
+    <p:identity name="source-fileset"/>
 
     <!-- ===================== -->
     <!-- SBS preprocessing     -->
     <!-- ===================== -->
+
+    <p:identity>
+        <p:input port="source"><p:pipe step="dtbook-source" port="result"/></p:input>
+    </p:identity>
 
     <p:xslt name="filter-brl-contraction-hints">
         <p:input port="parameters"><p:empty/></p:input>
@@ -146,13 +187,9 @@
     <!-- conversion to EPUB3      -->
     <!-- ======================== -->
 
-    <!-- Build a fileset wrapping the preprocessed DTBook in memory -->
-    <p:wrap-sequence wrapper="c:result"/>
-    <p:wrap-sequence wrapper="c:results"/>
-
     <px:dtbook-to-epub3 name="convert">
         <p:input port="source.fileset">
-            <p:empty/>
+            <p:pipe step="source-fileset" port="result"/>
         </p:input>
         <p:input port="source.in-memory">
             <p:pipe step="dtbook-preprocessed" port="result"/>
@@ -160,8 +197,21 @@
         <p:input port="tts-config">
             <p:empty/>
         </p:input>
-        <p:with-option name="output-dir" select="$output-dir"/>
-        <p:with-option name="temp-dir" select="$temp-dir"/>
+        <p:with-option name="audio" select="'false'"/>
+        <p:with-option name="output-dir" select="concat($temp-dir,'epub3/')"/>
+        <p:with-option name="output-name" select="$output-name"/>
+        <p:with-option name="temp-dir" select="concat($temp-dir,'dtbook-to-epub3/')"/>
     </px:dtbook-to-epub3>
+
+    <!-- ======================== -->
+    <!-- Store EPUB to output-dir -->
+    <!-- ======================== -->
+
+    <px:epub3-store name="store">
+        <p:input port="in-memory.in">
+            <p:pipe step="convert" port="result.in-memory"/>
+        </p:input>
+        <p:with-option name="href" select="concat($output-dir,$output-name,'.epub')"/>
+    </px:epub3-store>
 
 </p:declare-step>

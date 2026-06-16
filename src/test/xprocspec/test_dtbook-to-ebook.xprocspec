@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:sbs="http://www.sbs.ch/pipeline"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
+               script="../../main/resources/xml/xproc/dtbook-to-ebook.xpl">
+
+    <x:scenario label="convert a minimal DTBook to EPUB3">
+        <x:call step="sbs:dtbook-to-ebook">
+            <x:input port="source">
+                <x:document type="inline" xml:base="minimal.xml">
+                    <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/"
+                            xml:lang="de" version="2005-3">
+                        <head>
+                            <meta name="dtb:uid" content="sbs-test-uid-12345"/>
+                            <meta name="dc:Title" content="Minimal DTBook"/>
+                            <meta name="dc:Creator" content="SBS Test"/>
+                        </head>
+                        <book>
+                            <frontmatter>
+                                <doctitle>Minimal DTBook</doctitle>
+                                <docauthor>SBS Test</docauthor>
+                            </frontmatter>
+                            <bodymatter>
+                                <level1>
+                                    <h1>Kapitel 1</h1>
+                                    <p>Hallo Welt.</p>
+                                </level1>
+                            </bodymatter>
+                        </book>
+                    </dtbook>
+                </x:document>
+            </x:input>
+            <x:option name="output-dir" select="concat($temp-dir,'output/')"/>
+            <x:option name="temp-dir" select="concat($temp-dir,'temp/')"/>
+        </x:call>
+        <x:context label="the output directory">
+            <x:document type="directory" base-uri="temp-dir" href="output/"/>
+        </x:context>
+        <x:expect label="the output directory contains an EPUB file"
+                  type="xpath" test="exists(/c:directory/c:file[ends-with(@name, '.epub')])"/>
+    </x:scenario>
+
+</x:description>
