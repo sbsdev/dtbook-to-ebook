@@ -1,0 +1,9 @@
+Package: [[artifactId]]
+Version: [[version]]
+Section: text
+Priority: optional
+Architecture: all
+Depends: daisy-pipeline2 (>= 1.15.5)
+Maintainer: Christian Egli <christian.egli@sbs.ch>
+Description: SBS DTBook to EPUB3 converter module for DAISY Pipeline2
+Homepage: https://github.com/sbsdev/dtbook-to-ebook

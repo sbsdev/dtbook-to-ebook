@@ -35,6 +35,35 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Debian package that drops the module jar into a stock Pipeline2 installation -->
+      <plugin>
+        <groupId>org.vafer</groupId>
+        <artifactId>jdeb</artifactId>
+        <version>1.10</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jdeb</goal>
+            </goals>
+            <configuration>
+              <controlDir>${basedir}/src/deb/control</controlDir>
+              <deb>${project.build.directory}/${project.artifactId}_[[version]]_all.deb</deb>
+              <dataSet>
+                <data>
+                  <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                  <type>file</type>
+                  <mapper>
+                    <type>perm</type>
+                    <prefix>/opt/daisy-pipeline2/modules</prefix>
+                    <filemode>644</filemode>
+                  </mapper>
+                </data>
+              </dataSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
