@@ -90,8 +90,8 @@ server that have an EPUB product. 100 documents gives good coverage.
 
 ** DONE Phase 2 — Skeleton module
 - Create pom.xml pointing at latest DAISY Pipeline
-- Copy 14 preprocessing XSLTs verbatim; run XSpec → most pass
-- Wire standard dtbook-to-epub3.xpl as base step in sbs-dtbook-to-epub3.xpl
+- Copy 13 preprocessing XSLTs verbatim; run XSpec → most pass
+- Wire standard dtbook-to-epub3.xpl as base step in dtbook-to-ebook.xpl
 
 ** DONE Phase 3 — Port XSLT overrides
 - Port SBS overrides (epigraph, prodnote-as-span, caption order,

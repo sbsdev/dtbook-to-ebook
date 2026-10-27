@@ -41,7 +41,7 @@ mvn test -Dxspec.includes=**/addBoilerplate.xspec
 The module is a single OSGi bundle that wraps the standard DAISY
 Pipeline ~dtbook-to-epub3~ script. The SBS delta consists of:
 
-- *14 preprocessing XSLTs* applied to the DTBook before conversion
+- *13 preprocessing XSLTs* applied to the DTBook before conversion
   (boilerplate injection, footnote relocation, image ref wiring, etc.)
 - *~accessibility.css~* with SBS-specific visual adjustments
 - *Post-processing* for OPF accessibility metadata and content
@@ -50,7 +50,7 @@ Pipeline ~dtbook-to-epub3~ script. The SBS delta consists of:
 
 #+begin_example
 DTBook
-  └─▶ SBS preprocessing (14 XSLTs)
+  └─▶ SBS preprocessing (13 XSLTs)
         └─▶ daisy:dtbook-to-epub3  (standard, upstream)
               └─▶ SBS post-processing (metadata, CSS injection)
                     └─▶ EPUB3
