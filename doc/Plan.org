@@ -118,15 +118,18 @@ This module is built against DAISY Pipeline 1.15.5 (~modules-parent~
 For the regression run, replace the SBS assembly on the test server
 with a stock DAISY Pipeline 1.15.5 plus this module:
 
-1. Install the stock DAISY Pipeline 1.15.5 release (ships
-   ~dtbook-to-epub3~ 2.9.0).
-2. Build this module (~JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn
-   package~), copy ~target/dtbook-to-ebook-1.0-SNAPSHOT.jar~ into the
-   Pipeline's ~modules/~ directory and restart.
+~mvn package~ builds ~target/dtbook-to-ebook_<version>_all.deb~, which
+installs the module jar into ~/opt/daisy-pipeline2/modules/~. Releases
+on GitHub carry this deb.
+
+1. Once, by hand: remove the SBS module debs built for 1.11, otherwise
+   their jars end up on the 1.15 classpath:
+   ~sudo apt-get remove daisy-pipeline2-mod-sbs dtbook-to-odt~
+2. In ~sbs-infrastructure~, set ~pipeline2_version: 1.15.5~ and
+   ~sbs_module_debs~ to the release deb in ~host_vars/xmlp04/vars.yml~,
+   then run the ~daisyproducer2.yml~ playbook against ~test~.
 3. Check that ~GET <ws-url>/scripts~ lists ~sbs:dtbook-to-ebook~, the
    script id daisyproducer2 calls, so dp2 needs no change.
-4. If the URL or authentication changes, update ~:pipeline2~ in the dp2
-   test config.
 
 Impact on the test dp2:
 
