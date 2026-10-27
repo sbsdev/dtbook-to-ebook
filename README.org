@@ -36,6 +36,18 @@ Run a single XSpec test:
 mvn test -Dxspec.includes=**/addBoilerplate.xspec
 #+end_src
 
+* Release
+
+Updates the version number in the pom, tags the release (=v<version>=)
+and pushes. GitHub Actions then builds the =.deb= and attaches it to the
+GitHub release. Nothing is deployed to Maven Central.
+
+#+begin_src sh
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+mvn release:clean release:prepare -DdryRun=true
+mvn release:clean release:prepare
+#+end_src
+
 * Architecture
 
 The module is a single OSGi bundle that wraps the standard DAISY
