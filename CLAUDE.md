@@ -18,6 +18,8 @@ DTBook → SBS preprocessing (14 XSLTs) → daisy:dtbook-to-epub3 → SBS post-p
 
 ## Commands
 
+Maven must run on Java 8; newer JDKs fail in `ds-to-spi-maven-plugin` with an `IllegalAccessError`. If your default JDK is newer, prefix commands with e.g. `JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64`.
+
 ```sh
 mvn clean package          # build
 mvn test                   # run all tests
