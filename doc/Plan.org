@@ -67,46 +67,48 @@ must be structural, not byte-for-byte. For each document pair:
 
 ** Comparison dimensions
 
-| Dimension                           | Pass condition                                                     |
-|-------------------------------------+--------------------------------------------------------------------|
-| All XHTML files present             | same filenames in ~META-INF/container.xml~ spine                   |
-| XHTML structure                     | same elements and text after normalisation                         |
-| OPF metadata                        | same ~<meta>~ elements (excluding ~dcterms:modified~)              |
-| Footnotes in rearmatter             | ~epub:type="rearnotes"~ section exists when source has footnotes   |
-| Caption order                       | ~<figure>~ contains ~<figcaption>~ before ~<img>~                  |
-| ~aria-describedby~ wired            | every ~<img>~ with a prodnote has the attribute                    |
-| No ~longdesc~                       | attribute absent from all ~<img>~ tags                             |
-| Accessibility metadata              | ~schema:accessMode~ and ~schema:accessibilityFeature~ in OPF       |
-| Boilerplate                         | first ~<section>~ contains expected copyright text                 |
+| Dimension                | Pass condition                                                                                                       |
+|--------------------------+----------------------------------------------------------------------------------------------------------------------|
+| All XHTML files present  | same filenames in ~META-INF/container.xml~ spine                                                                     |
+| XHTML structure          | same elements and text after normalisation                                                                           |
+| OPF metadata             | same ~<meta>~ elements (excluding ~dcterms:modified~)                                                                |
+| Footnotes in rearmatter  | ~footnotes~/~rearnotes~/~endnotes~ section exists when source has footnotes (the current converter uses ~footnotes~) |
+| Caption order            | ~<figure>~ contains ~<figcaption>~ before ~<img>~                                                                    |
+| ~aria-describedby~ wired | every ~<img>~ with a prodnote has the attribute                                                                      |
+| No ~longdesc~            | attribute absent from all ~<img>~ tags                                                                               |
+| Accessibility metadata   | ~schema:accessMode~ and ~schema:accessibilityFeature~ in OPF                                                         |
+| Boilerplate              | first ~<section>~ contains expected copyright text                                                                   |
 
 Document selection: find the most recent N documents on the production
 server that have an EPUB product. 100 documents gives good coverage.
 
 * Development sequence
 
-** Phase 1 — Specification
+** DONE Phase 1 — Specification
 - Write acceptance criteria as XSpec scenarios (failing)
 - Commit XSpec files to this repo
 
-** Phase 2 — Skeleton module
+** DONE Phase 2 — Skeleton module
 - Create pom.xml pointing at latest DAISY Pipeline
 - Copy 14 preprocessing XSLTs verbatim; run XSpec → most pass
 - Wire standard dtbook-to-epub3.xpl as base step in sbs-dtbook-to-epub3.xpl
 
-** Phase 3 — Port XSLT overrides
+** DONE Phase 3 — Port XSLT overrides
 - Port SBS overrides (epigraph, prodnote-as-span, caption order,
   namespace cleanup, OPF metadata) as post-processing steps
 - XSpec → all pass
 
-** Phase 4 — Integration test
+** DONE Phase 4 — Integration test
 - Add one end-to-end Maven integration test: real DTBook fixture,
   assert on EPUB content
 
-** Phase 5 — Regression run
-- Run compare-epub.bb against 100 production books
-- Fix discrepancies until 100/100 pass
+** TODO Phase 5 — Regression run
+- [X] Write ~scripts/compare-epub.bb~ (tested on one document)
+- [ ] Deploy this module to the test instance
+- [ ] Run compare-epub.bb against 100 production books
+- [ ] Fix discrepancies until 100/100 pass
 
-** Phase 6 — Assembly integration
+** TODO Phase 6 — Assembly integration
 - Add this module as Maven dependency in pipeline assembly pom.xml
 - Remove old epub3-dtbook-migrator subrepo
-- Deploy to test instance; repeat regression run
+- Repeat regression run against the assembled pipeline
