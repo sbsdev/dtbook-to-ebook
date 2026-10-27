@@ -110,16 +110,16 @@ server that have an EPUB product. 100 documents gives good coverage.
 
 *** Test deployment
 
-This module is built against DAISY Pipeline 1.14 (~modules-parent~
-1.14.30, ~dtbook-to-epub3~ 2.6.2), but the SBS assembly
+This module is built against DAISY Pipeline 1.15.5 (~modules-parent~
+1.15.5, ~dtbook-to-epub3~ 2.9.0), but the SBS assembly
 (sbsdev/pipeline) is still on 1.11.1-SNAPSHOT with ~dtbook-to-epub3~
 1.3.2. The bundle will most likely not load there.
 
 For the regression run, replace the SBS assembly on the test server
-with a stock DAISY Pipeline 1.14 plus this module:
+with a stock DAISY Pipeline 1.15.5 plus this module:
 
-1. Install the stock DAISY Pipeline 1.14.x release that ships
-   ~dtbook-to-epub3~ 2.6.2.
+1. Install the stock DAISY Pipeline 1.15.5 release (ships
+   ~dtbook-to-epub3~ 2.9.0).
 2. Build this module (~JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn
    package~), copy ~target/dtbook-to-ebook-1.0-SNAPSHOT.jar~ into the
    Pipeline's ~modules/~ directory and restart.
@@ -130,7 +130,7 @@ with a stock DAISY Pipeline 1.14 plus this module:
 
 Impact on the test dp2:
 
-| dp2 feature                 | Pipeline script               | With stock 1.14 + this module |
+| dp2 feature                 | Pipeline script               | With stock 1.15 + this module |
 |-----------------------------+-------------------------------+-------------------------------|
 | EPUB preview                | ~sbs:dtbook-to-ebook~         | new module                    |
 | HTML preview                | ~dtbook-to-html~              | works (stock)                 |
@@ -143,8 +143,8 @@ Check that the Pipeline's Java runtime on xmlp04 runs this module (it
 targets Java 8).
 
 ** TODO Phase 6 — Assembly integration
-- Decide: upgrade the SBS assembly to Pipeline 1.14, or keep a separate
-  1.14 instance for EPUB in production (dp2 currently has a single
+- Decide: upgrade the SBS assembly to Pipeline 1.15, or keep a separate
+  1.15 instance for EPUB in production (dp2 currently has a single
   Pipeline 2 URL)
 - Add this module as Maven dependency in pipeline assembly pom.xml
 - Remove old epub3-dtbook-migrator subrepo and the old
