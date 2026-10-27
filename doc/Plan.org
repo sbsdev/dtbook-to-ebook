@@ -104,11 +104,50 @@ server that have an EPUB product. 100 documents gives good coverage.
 
 ** TODO Phase 5 — Regression run
 - [X] Write ~scripts/compare-epub.bb~ (tested on one document)
-- [ ] Deploy this module to the test instance
-- [ ] Run compare-epub.bb against 100 production books
+- [ ] Deploy this module to the test instance (xmlp04), see below
+- [ ] Run compare-epub.bb with ~:limit 1~, then against 100 production books
 - [ ] Fix discrepancies until 100/100 pass
 
+*** Test deployment
+
+This module is built against DAISY Pipeline 1.14 (~modules-parent~
+1.14.30, ~dtbook-to-epub3~ 2.6.2), but the SBS assembly
+(sbsdev/pipeline) is still on 1.11.1-SNAPSHOT with ~dtbook-to-epub3~
+1.3.2. The bundle will most likely not load there.
+
+For the regression run, replace the SBS assembly on the test server
+with a stock DAISY Pipeline 1.14 plus this module:
+
+1. Install the stock DAISY Pipeline 1.14.x release that ships
+   ~dtbook-to-epub3~ 2.6.2.
+2. Build this module (~JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn
+   package~), copy ~target/dtbook-to-ebook-1.0-SNAPSHOT.jar~ into the
+   Pipeline's ~modules/~ directory and restart.
+3. Check that ~GET <ws-url>/scripts~ lists ~sbs:dtbook-to-ebook~, the
+   script id daisyproducer2 calls, so dp2 needs no change.
+4. If the URL or authentication changes, update ~:pipeline2~ in the dp2
+   test config.
+
+Impact on the test dp2:
+
+| dp2 feature                 | Pipeline script               | With stock 1.14 + this module |
+|-----------------------------+-------------------------------+-------------------------------|
+| EPUB preview                | ~sbs:dtbook-to-ebook~         | new module                    |
+| HTML preview                | ~dtbook-to-html~              | works (stock)                 |
+| ODT preview                 | ~dtbook-to-odt~ (SBS module)  | *unavailable*                 |
+| Braille                     | not Pipeline 2                | unaffected                    |
+| DTBook validation on upload | Pipeline 1                    | unaffected                    |
+
+Braille and ODT are not tested at the moment, so this is acceptable.
+Check that the Pipeline's Java runtime on xmlp04 runs this module (it
+targets Java 8).
+
 ** TODO Phase 6 — Assembly integration
+- Decide: upgrade the SBS assembly to Pipeline 1.14, or keep a separate
+  1.14 instance for EPUB in production (dp2 currently has a single
+  Pipeline 2 URL)
 - Add this module as Maven dependency in pipeline assembly pom.xml
-- Remove old epub3-dtbook-migrator subrepo
+- Remove old epub3-dtbook-migrator subrepo and the old
+  ~modules/sbs/dtbook-to-ebook~ (it declares the same script id
+  ~sbs:dtbook-to-ebook~, so both cannot be installed)
 - Repeat regression run against the assembled pipeline
