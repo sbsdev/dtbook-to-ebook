@@ -20,8 +20,34 @@
   <name>DP2 Modules :: SBS DTBook to E-Book</name>
   <description>Converts a DTBook XML document into an EPUB3 e-book using SBS-specific preprocessing.</description>
 
+  <scm>
+    <connection>scm:git:https://github.com/sbsdev/dtbook-to-ebook.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/sbsdev/dtbook-to-ebook.git</developerConnection>
+    <url>https://github.com/sbsdev/dtbook-to-ebook</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <build>
     <plugins>
+      <!-- mvn release:prepare tags v<version>; the release workflow builds and uploads the deb -->
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.1.1</version>
+        <dependencies>
+          <!-- the parent pins gitexe 1.9.1, which is incompatible with release plugin 3.x -->
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <version>2.1.0</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+          <pushChanges>true</pushChanges>
+          <!-- the parent activates a Sonatype deploy profile -->
+          <arguments combine.self="override"></arguments>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.daisy.pipeline.build</groupId>
         <artifactId>modules-build-helper</artifactId>

@@ -25,6 +25,7 @@ mvn clean package          # build
 mvn test                   # run all tests
 mvn test -Dxspec.includes=**/addBoilerplate.xspec  # run a single XSpec test
 ./scripts/compare-epub.bb compare-epub-config.edn  # regression test against production EPUBs
+mvn -B release:prepare    # release: tags v<version> and pushes; CI attaches the .deb to the GitHub release
 ```
 
 ## Architecture
