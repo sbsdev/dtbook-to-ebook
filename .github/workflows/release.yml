@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       # the DAISY Pipeline build plugins only work on Java 8
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '8'
@@ -24,7 +24,7 @@ jobs:
       - name: Build project and run tests
         run: mvn --batch-mode package
       - name: Create release and upload release asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           draft: false
           prerelease: false
