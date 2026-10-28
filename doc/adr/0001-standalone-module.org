@@ -1,13 +1,8 @@
 #+options: todo:t
-#+title: Architecture Decision Records
-#+date: <2026-06-08 Mo>
-#+author: Christian Egli
-#+email: christian.egli@sbs.ch
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
 #+language: en
 
-#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
-
-* PROPOSED Replace SBS EPUB fork with standard DAISY Pipeline converter
+* ACCEPTED ADR-0001: Replace SBS EPUB fork with standard DAISY Pipeline converter
 - Deciders :: CE
 - Date :: [2026-06-08 Mo]
 
@@ -119,11 +114,11 @@ dependency.
 
 ** SBS Requirements
 
-The full requirements are maintained in [[file:Requirements.org][doc/Requirements.org]].
+The full requirements are maintained in [[file:../Requirements.org][doc/Requirements.org]].
 
 ** Implementation Plan
 
-1. Write XSpec tests for every requirement in [[file:Requirements.org][doc/Requirements.org]] (failing).
+1. Write XSpec tests for every requirement in [[file:../Requirements.org][doc/Requirements.org]] (failing).
 2. Copy the 14 preprocessing XSLTs from the old module verbatim; run
    XSpec — most pass immediately.
 3. Wire the standard ~dtbook-to-epub3.xpl~ as the base step in a new

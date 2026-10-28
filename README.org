@@ -8,7 +8,7 @@ Converts DTBook XML to EPUB3 using the standard DAISY Pipeline
 ~dtbook-to-epub3~ script, with SBS-specific preprocessing, CSS, and
 accessibility metadata layered on top as a thin wrapper module.
 
-See [[file:doc/Architecture_Decision_Records.org][doc/Architecture_Decision_Records.org]] for the background and the
+See [[file:doc/adr/0001-standalone-module.org][ADR-0001]] for the background and the
 decision to replace the old Nordic migrator fork with this module.
 See [[file:doc/Plan.org][doc/Plan.org]] for the XSpec test strategy, regression test design,
 and phased development sequence.

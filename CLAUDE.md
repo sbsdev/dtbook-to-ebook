@@ -52,7 +52,7 @@ Every SBS requirement in `doc/Requirements.org` must be covered by an XSpec test
 
 ## Key documentation
 
-- `doc/Architecture_Decision_Records.org` — why this approach was chosen over maintaining the fork
+- `doc/adr/` — architecture decision records, one per file, indexed in `doc/adr/README.org`
 - `doc/Requirements.org` — full list of SBS-specific requirements (CSS, boilerplate, content structure, images/captions, OPF accessibility metadata, navigation, i18n)
 
 ## Regression testing

@@ -1,0 +1,43 @@
+#+options: todo:t
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+#+language: en
+
+* ACCEPTED ADR-0003: Ship the module as a Debian package attached to GitHub releases
+- Deciders :: CE
+- Date :: [2026-10-27 Di]
+
+** Context and Problem Statement
+
+A stock Pipeline loads module jars from ~/opt/daisy-pipeline2/modules/~.
+The servers are managed with Ansible (sbs-infrastructure). We need a
+way to get the module jar onto the servers and a way to cut releases.
+
+** Considered Options
+
+- A :: Add the module as a dependency of the SBS assembly and ship it
+  with the assembly.
+- B :: Copy the jar to the server by hand or with an Ansible file copy.
+- C :: Build a Debian package with jdeb that installs the jar into
+  ~/opt/daisy-pipeline2/modules/~, attach it to a GitHub release and
+  let Ansible install it from the release URL (~sbs_module_debs~).
+
+** Decision Outcome
+
+Chosen option: *C*, because it fits how the servers are already
+managed (debs installed by Ansible), gives versioned and reproducible
+installs, and does not depend on the assembly (see [[file:0002-stock-pipeline-1.15.org][ADR-0002]]).
+
+Releases are made with the ~maven-release-plugin~ (~mvn
+release:prepare~ tags ~v<version>~), the same convention as our other
+repositories. A GitHub workflow builds the deb on the tag and attaches
+it to the release. Nothing is deployed to Maven Central.
+
+*** Consequences
+
+- jdeb 1.10 is the last version that runs on Java 8, which the DAISY
+  build plugins still require.
+- The parent pom pins an old ~maven-scm-provider-gitexe~ and activates
+  a Sonatype deploy profile; both are overridden in our pom.
+- During development a release per fix is too slow. ~mvn package~ also
+  builds a ~0.2.1~SNAPSHOT~ deb that can be installed with ~dpkg -i~
+  on the test server; only working states get released.

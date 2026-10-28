@@ -4,7 +4,7 @@
 
 Detailed implementation guidance for the SBS DTBook-to-EPUB3 converter.
 The high-level decision and 7-step sequence are in
-[[file:Architecture_Decision_Records.org][Architecture_Decision_Records.org]]; the requirements are in [[file:Requirements.org][Requirements.org]].
+[[file:adr/0001-standalone-module.org][ADR-0001]]; the requirements are in [[file:Requirements.org][Requirements.org]].
 
 * XSpec test strategy
 

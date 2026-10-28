@@ -1,0 +1,40 @@
+#+options: todo:t
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+#+language: en
+
+* ACCEPTED ADR-0005: Attach accessibility.css via the upstream epub-stylesheet option
+- Deciders :: CE
+- Date :: [2026-10-28 Mi]
+
+** Context and Problem Statement
+
+SBS EPUBs link ~css/accessibility.css~ from every content document
+(see [[file:../Requirements.org][Requirements]]). The first test run on xmlp04 showed that the
+module shipped the CSS but did not put it into the EPUB.
+
+** Considered Options
+
+- A :: Add the CSS in an SBS post-processing step: add it to the
+  fileset, link it from each content document and list it in the
+  manifest.
+- B :: Pass the CSS to ~px:dtbook-to-epub3~ via its ~epub-stylesheet~
+  option, copying it from the module jar to the temp dir first,
+  because the option is documented as taking "files that exist on
+  disk".
+- C :: Like B, but pass the URI of the CSS inside the module jar
+  directly.
+
+** Decision Outcome
+
+Chosen option: *C*, because upstream already does the linking and
+manifest work, and a run on xmlp04 showed that it reads the CSS from
+inside the jar without problems. B was implemented first and then
+dropped as unnecessary.
+
+*** Consequences
+
+- One line in ~dtbook-to-ebook.xpl~ and no SBS code for CSS handling.
+- The XProcSpec tests load the module from the source tree, so they
+  cannot detect a regression in reading the CSS from the jar. The
+  regression run (~compare-epub.bb~, dimension ~accessibility-css~)
+  covers it.

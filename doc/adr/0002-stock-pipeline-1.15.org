@@ -1,0 +1,43 @@
+#+options: todo:t
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+#+language: en
+
+* ACCEPTED ADR-0002: Build against a stock DAISY Pipeline 1.15.5
+- Deciders :: CE
+- Date :: [2026-10-27 Di]
+
+** Context and Problem Statement
+
+The module was first built against the SBS assembly (sbsdev/pipeline,
+1.11.1-SNAPSHOT with ~dtbook-to-epub3~ 1.3.2). That version of
+~dtbook-to-epub3~ is old, and the assembly barely builds (see
+[[file:0001-standalone-module.org][ADR-0001]]). For the regression run, the module needs a Pipeline it can
+actually be deployed on.
+
+** Considered Options
+
+- A :: Build against the SBS assembly (1.11.1) and deploy into it.
+- B :: Build against the latest stock DAISY Pipeline (1.15.5:
+  ~modules-parent~ 1.15.5, ~dtbook-to-epub3~ 2.9.0, ~common-utils~
+  3.4.1) and run it on a stock Pipeline installed from the upstream deb.
+
+** Decision Outcome
+
+Chosen option: *B*, because the whole point of the migration is to
+run on the maintained upstream converter, and a stock Pipeline needs
+no SBS build at all.
+
+*** Consequences
+
+- The test server (xmlp04) runs a stock Pipeline 1.15.5 instead of
+  the SBS assembly. Braille and ODT conversions are not available
+  there; we only test EPUB on it.
+- Pipeline 1.15 no longer reads the old ~px:script="true"~ catalog
+  syntax; scripts must be registered with ~px:content-type="script"~
+  and ~px:id~. The XProcSpec tests call the step by type and did not
+  catch this.
+- The Pipeline job database (Derby) of 1.11 is incompatible with 1.15
+  and had to be moved aside on xmlp04.
+- Production (xmlp01) still runs the 1.11 assembly. Whether prod gets
+  an upgraded assembly or a separate 1.15 instance for EPUB is still
+  open (Phase 6 in [[file:../Plan.org][the plan]]).

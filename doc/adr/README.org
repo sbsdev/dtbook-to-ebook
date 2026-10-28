@@ -1,0 +1,17 @@
+#+title: Architecture Decision Records
+#+language: en
+
+One decision per file, numbered in the order they were first written.
+To add one, copy [[file:0000-template.org][0000-template.org]] to the next free number;
+a revised ADR keeps its number.
+
+When you add a record or change its status, update its row in the table below too.
+
+| ADR      | Title                                                            | Status     |
+|----------+------------------------------------------------------------------+------------|
+| [[file:0001-standalone-module.org][ADR-0001]] | Replace SBS EPUB fork with standard DAISY Pipeline converter     | ACCEPTED   |
+| [[file:0002-stock-pipeline-1.15.org][ADR-0002]] | Build against a stock DAISY Pipeline 1.15.5                      | ACCEPTED   |
+| [[file:0003-debian-package.org][ADR-0003]] | Ship the module as a Debian package attached to GitHub releases  | ACCEPTED   |
+| [[file:0004-default-java.org][ADR-0004]] | Run Pipeline 1.15 on the distribution's default Java             | ACCEPTED   |
+| [[file:0005-epub-stylesheet.org][ADR-0005]] | Attach accessibility.css via the upstream epub-stylesheet option | ACCEPTED   |
+| [[file:0006-endnotes.org][ADR-0006]] | Mark up notes as endnotes following the Nordic guidelines        | PROPOSED   |

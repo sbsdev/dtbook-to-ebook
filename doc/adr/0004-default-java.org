@@ -1,0 +1,33 @@
+#+options: todo:t
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+#+language: en
+
+* ACCEPTED ADR-0004: Run Pipeline 1.15 on the distribution's default Java
+- Deciders :: CE
+- Date :: [2026-10-27 Di]
+
+** Context and Problem Statement
+
+The Ansible role for Pipeline installed Java 8 and pinned ~JAVA_HOME~
+to it, because the 1.11 assembly requires Java 8. Pipeline 1.15 runs
+on current Java versions.
+
+** Considered Options
+
+- A :: Keep Java 8 for Pipeline 1.15.
+- B :: Make the role version-aware and choose Java 8 or a newer Java
+  depending on the Pipeline version.
+- C :: Depend on the distribution's default Java (~default-java~).
+
+** Decision Outcome
+
+Chosen option: *C*, because it is the simplest and Java 8 is
+obsolete. The change lives on the ~pipeline-1.15~ branch of
+sbs-infrastructure.
+
+*** Consequences
+
+- The branch must not be merged while xmlp01 and xmlp02 run the 1.11
+  assembly, which still needs Java 8.
+- Building the module still requires Java 8 (DAISY build plugins), so
+  build and runtime Java differ.
