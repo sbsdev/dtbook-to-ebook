@@ -229,6 +229,10 @@
                     </p:input>
                     <!-- keep the base URI so that the document still matches the fileset -->
                     <p:with-option name="output-base-uri" select="$opf-uri"/>
+                    <p:with-param name="identifier"
+                                  select="(/*/*:head/*:meta[lower-case(@name)=('dc:identifier','dtb:uid')]/@content)[1]">
+                        <p:pipe step="dtbook-source" port="result"/>
+                    </p:with-param>
                 </p:xslt>
             </p:when>
             <p:otherwise>

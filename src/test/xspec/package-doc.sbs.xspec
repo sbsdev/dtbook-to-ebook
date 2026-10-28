@@ -8,6 +8,8 @@
                xmlns:c="http://www.w3.org/ns/xproc-step"
                stylesheet="../../main/resources/xml/xslt/package-doc.sbs.xsl">
 
+  <x:param name="identifier" select="'sbs-uid'"/>
+
   <x:scenario label="a text-only book">
     <x:context>
       <c:wrapper>
@@ -43,6 +45,20 @@
               test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'longDescription')"/>
     <x:expect label="metadata values are element text, not a content attribute"
               test="empty(//opf:meta[@property]/@content)"/>
+  </x:scenario>
+
+  <x:scenario label="the identifier comes from the DTBook">
+    <x:context>
+      <c:wrapper>
+        <opf:package unique-identifier="pub-id">
+          <opf:metadata>
+            <dc:identifier id="pub-id">0f6e3a4c-random-uuid</dc:identifier>
+          </opf:metadata>
+        </opf:package>
+      </c:wrapper>
+    </x:context>
+    <x:expect label="the unique identifier is the one passed in"
+              test="//dc:identifier[@id='pub-id'] = 'sbs-uid'"/>
   </x:scenario>
 
   <x:scenario label="a book with described images">

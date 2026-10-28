@@ -10,9 +10,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:opf="http://www.idpf.org/2007/opf"
     xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
     exclude-result-prefixes="html">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+
+  <!-- the book's identifier from the DTBook -->
+  <xsl:param name="identifier" select="''"/>
 
   <xsl:template match="/*">
     <xsl:apply-templates select="opf:package">
@@ -27,6 +31,14 @@
   <xsl:template match="node()|@*">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- upstream generates a random identifier for the intermediate ZedAI; use the book's -->
+  <xsl:template match="dc:identifier[@id = ancestor::opf:package/@unique-identifier]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:value-of select="if ($identifier) then $identifier else ."/>
     </xsl:copy>
   </xsl:template>
 

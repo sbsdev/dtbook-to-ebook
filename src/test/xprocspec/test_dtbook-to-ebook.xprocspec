@@ -48,6 +48,8 @@
         </x:context>
         <x:expect label="the package document has the correct title"
                   type="xpath" test="/opf:package/opf:metadata/dc:title = 'Minimal DTBook'"/>
+        <x:expect label="the package document has the DTBook identifier"
+                  type="xpath" test="/opf:package/opf:metadata/dc:identifier[@id = /opf:package/@unique-identifier] = 'sbs-test-uid-12345'"/>
         <x:expect label="the package document has the correct language"
                   type="xpath" test="/opf:package/@xml:lang = 'de'"/>
         <x:expect label="the package document declares an accessibility access mode"
