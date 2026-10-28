@@ -15,7 +15,8 @@
          '[clojure.data.xml :as xml]
          '[clojure.edn :as edn]
          '[clojure.java.io :as io]
-         '[clojure.string :as str])
+         '[clojure.string :as str]
+         '[clojure.walk :as walk])
 
 (import '[java.util.zip ZipInputStream])
 
@@ -235,17 +236,45 @@
 
 (def ignored-opf-meta #{"dcterms:modified" "date" "identifier"})
 
+(defn opf-key [el]
+  (or (attr el "property") (attr el "name") (local-name (:tag el))))
+
 (defn opf-metadata [{:keys [opf]}]
   (set (for [el (elements opf)
              :let [n (local-name (:tag el))
-                   prop (attr el "property")
-                   key (or prop (attr el "name") n)]
+                   key (opf-key el)]
              :when (or (= "meta" n) (= "http://purl.org/dc/elements/1.1/" (namespace-uri (:tag el))))
              :when (not (ignored-opf-meta key))]
          [key (or (attr el "content") (text-of el))])))
 
+(defn normalised-epub
+  "The package document followed by the content documents, with build dates masked."
+  [epub]
+  (let [opf (walk/postwalk #(if (and (map? %) (:tag %) (#{"dcterms:modified" "date"} (opf-key %)))
+                              (-> % (assoc :content ["*"])
+                                  ;; the old converter also writes it into a content attribute
+                                  (update :attrs (fn [attrs] (into {} (for [[k v] attrs]
+                                                                        [k (if (= "content" (local-name k)) "*" v)])))))
+                              %)
+                           (:opf epub))]
+    (str (str/join \newline (normalised-lines opf)) \newline (normalised-content epub))))
+
 (defn content-elements [epub]
   (mapcat (fn [[_ tree]] (elements tree)) (:spine epub)))
+
+(defn producer-link? [el]
+  ;; the boilerplate links to the producer, www.unitas.ch for Italian, www.sbs.ch otherwise
+  (and (= "a" (local-name (:tag el)))
+       (re-find #"//www\.(sbs|unitas)\.ch" (or (attr el "href") ""))))
+
+(defn boilerplate-text
+  "Text of the innermost section (or body) holding the producer link."
+  [els]
+  (let [sections (filter #(and (#{"section" "body"} (local-name (:tag %)))
+                               (some producer-link? (elements %)))
+                         els)]
+    (when (seq sections)
+      (text-of (apply min-key (comp count text-of) sections)))))
 
 (defn figure-caption-first? [fig]
   (let [order (->> (elements fig) (map (comp local-name :tag)) (filter #{"figcaption" "img"}))]
@@ -263,7 +292,7 @@
      :images-with-describedby (count (filter #(attr % "aria-describedby") imgs))
      :no-longdesc            (not-any? #(attr % "longdesc") imgs)
      :accessibility-metadata (every? (set (map first meta)) ["schema:accessMode" "schema:accessibilityFeature"])
-     :boilerplate            (some->> els (filter #(= "section" (local-name (:tag %)))) first text-of)
+     :boilerplate            (boilerplate-text els)
      :accessibility-css      (boolean (some #(str/ends-with? % "accessibility.css") (:files epub)))}))
 
 ;;; Per-document processing
@@ -280,8 +309,8 @@
 (defn compare-epubs [output-dir doc-id prod-bytes test-bytes normalise-ids]
   (let [prod      (read-epub (unzip prod-bytes))
         test      (read-epub (unzip test-bytes))
-        prod-text (normalise-ids (normalised-content prod))
-        test-text (normalise-ids (normalised-content test))
+        prod-text (normalise-ids (normalised-epub prod))
+        test-text (normalise-ids (normalised-epub test))
         prod-dims (dimensions prod)
         test-dims (dimensions test)]
     (when (not= prod-text test-text)
