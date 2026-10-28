@@ -60,7 +60,7 @@ with its ~prodnote~, so ~imgref~ can be inserted unconditionally.
 | ~accessMode textual~ always; ~visual~ only when images present | [[https://github.com/sbsdev/pipeline/commit/5d85e9430b84703b293c07ce56b85f3a403e4744][5d85e94]] | package document XSLT       |
 | Correct ~accessModeSufficient~ values                          | [[https://github.com/sbsdev/pipeline/commit/80fe53ba14368f86eb2c00d025f9b275158e5e85][80fe53b]] | package document XSLT       |
 | ~longDescription~ value in ~accessibilityFeature~              | [[https://github.com/sbsdev/pipeline/commit/0a12308fc71bb5b62bccabc87f0ea1c85c50d8a7][0a12308]] | package document XSLT       |
-| Metadata value in ~content~ attribute                          | [[https://github.com/sbsdev/pipeline/commit/5b7f102c1430f39668a73e38ec0f589f5706ac3c][5b7f102]] | package document XSLT       |
+| Metadata value as element text, not in a ~content~ attribute  | [[https://github.com/sbsdev/pipeline/commit/5b7f102c1430f39668a73e38ec0f589f5706ac3c][5b7f102]] | package document XSLT       |
 
 * Navigation
 

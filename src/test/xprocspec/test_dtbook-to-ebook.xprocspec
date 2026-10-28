@@ -52,6 +52,8 @@
                   type="xpath" test="/opf:package/@xml:lang = 'de'"/>
         <x:expect label="the package document declares an accessibility access mode"
                   type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessMode'])"/>
+        <x:expect label="the SBS post-processing adds accessModeSufficient"
+                  type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessModeSufficient'])"/>
         <x:expect label="the manifest contains accessibility.css"
                   type="xpath" test="exists(/opf:package/opf:manifest/opf:item[@href='css/accessibility.css'][@media-type='text/css'])"/>
 

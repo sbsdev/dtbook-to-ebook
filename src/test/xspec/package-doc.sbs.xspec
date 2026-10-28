@@ -1,103 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Tests for the SBS OPF package document post-processing XSLT.
-     Stylesheet does not exist yet — created in Phase 3. -->
+     The context wraps the package document together with the content documents. -->
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
                xmlns:opf="http://www.idpf.org/2007/opf"
                xmlns:dc="http://purl.org/dc/elements/1.1/"
-               xmlns:schema="http://schema.org/"
+               xmlns:html="http://www.w3.org/1999/xhtml"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
                stylesheet="../../main/resources/xml/xslt/package-doc.sbs.xsl">
 
-  <x:scenario label="schema:accessMode and schema:accessibilityFeature meta elements are present">
+  <x:scenario label="a text-only book">
     <x:context>
-      <opf:package>
-        <opf:metadata>
-          <dc:title>Test Book</dc:title>
-        </opf:metadata>
-      </opf:package>
+      <c:wrapper>
+        <opf:package>
+          <opf:metadata>
+            <dc:title>Text-only book</dc:title>
+            <opf:meta property="schema:accessMode">textual</opf:meta>
+            <opf:meta property="schema:accessibilityFeature">tableOfContents</opf:meta>
+            <opf:meta property="schema:accessibilityHazard">unknown</opf:meta>
+          </opf:metadata>
+          <opf:manifest>
+            <opf:item media-type="application/xhtml+xml" href="content.xhtml" id="c1"/>
+          </opf:manifest>
+        </opf:package>
+        <html:html><html:body><html:p>Text</html:p></html:body></html:html>
+      </c:wrapper>
     </x:context>
-    <x:expect label="schema:accessMode meta is present"
-              test="exists(//opf:meta[@property='schema:accessMode'])"/>
-    <x:expect label="schema:accessibilityFeature meta is present"
-              test="exists(//opf:meta[@property='schema:accessibilityFeature'])"/>
+    <x:expect label="the result is the package document"
+              test="exists(/opf:package) and empty(//html:*)"/>
+    <x:expect label="accessMode textual is present exactly once"
+              test="count(//opf:meta[@property='schema:accessMode' and . = 'textual']) = 1"/>
+    <x:expect label="accessMode visual is absent"
+              test="empty(//opf:meta[@property='schema:accessMode' and . = 'visual'])"/>
+    <x:expect label="accessModeSufficient is textual"
+              test="//opf:meta[@property='schema:accessModeSufficient'] = 'textual'"/>
+    <x:expect label="accessibilityHazard is none and replaces unknown"
+              test="string-join(//opf:meta[@property='schema:accessibilityHazard'], ',') = 'none'"/>
+    <x:expect label="existing accessibilityFeature values are kept"
+              test="//opf:meta[@property='schema:accessibilityFeature'] = 'tableOfContents'"/>
+    <x:expect label="alternativeText is absent"
+              test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'alternativeText')"/>
+    <x:expect label="longDescription is absent"
+              test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'longDescription')"/>
+    <x:expect label="metadata values are element text, not a content attribute"
+              test="empty(//opf:meta[@property]/@content)"/>
   </x:scenario>
 
-  <x:scenario label="schema:accessMode textual is always present">
+  <x:scenario label="a book with described images">
     <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
-        <opf:manifest/>
-      </opf:package>
+      <c:wrapper>
+        <opf:package>
+          <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
+          <opf:manifest>
+            <opf:item media-type="image/jpeg" href="photo.jpg" id="img1"/>
+          </opf:manifest>
+        </opf:package>
+        <html:html><html:body>
+          <html:img src="photo.jpg" alt="A photo" aria-describedby="d1"/>
+          <html:aside id="d1"><html:p>Description</html:p></html:aside>
+        </html:body></html:html>
+      </c:wrapper>
     </x:context>
-    <x:expect label="accessMode textual meta is present"
-              test="exists(//opf:meta[@property='schema:accessMode' and . = 'textual'])"/>
+    <x:expect label="accessMode visual is present"
+              test="//opf:meta[@property='schema:accessMode'] = 'visual'"/>
+    <x:expect label="alternativeText is present"
+              test="//opf:meta[@property='schema:accessibilityFeature'] = 'alternativeText'"/>
+    <x:expect label="longDescription is present"
+              test="//opf:meta[@property='schema:accessibilityFeature'] = 'longDescription'"/>
   </x:scenario>
 
-  <x:scenario label="schema:accessMode visual is present only when images exist">
+  <x:scenario label="a book with images without alt text or description">
     <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
-        <opf:manifest>
-          <opf:item media-type="image/jpeg" href="photo.jpg" id="img1"/>
-        </opf:manifest>
-      </opf:package>
+      <c:wrapper>
+        <opf:package>
+          <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
+          <opf:manifest>
+            <opf:item media-type="image/jpeg" href="photo.jpg" id="img1"/>
+          </opf:manifest>
+        </opf:package>
+        <html:html><html:body><html:img src="photo.jpg" alt=""/></html:body></html:html>
+      </c:wrapper>
     </x:context>
-    <x:expect label="accessMode visual meta is present"
-              test="exists(//opf:meta[@property='schema:accessMode' and . = 'visual'])"/>
-  </x:scenario>
-
-  <x:scenario label="schema:accessMode visual is absent when no images exist">
-    <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Text-only book</dc:title></opf:metadata>
-        <opf:manifest>
-          <opf:item media-type="application/xhtml+xml" href="content.xhtml" id="c1"/>
-        </opf:manifest>
-      </opf:package>
-    </x:context>
-    <x:expect label="accessMode visual meta is absent"
-              test="not(exists(//opf:meta[@property='schema:accessMode' and . = 'visual']))"/>
-  </x:scenario>
-
-  <x:scenario label="alternativeText accessibilityFeature is present only when images have alt text">
-    <x:context>
-      <!-- Book with image that has alt text -->
-      <opf:package>
-        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
-      </opf:package>
-    </x:context>
-    <x:expect label="alternativeText meta is present"
-              test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'alternativeText'])"/>
-  </x:scenario>
-
-  <x:scenario label="accessModeSufficient values are correct">
-    <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
-        <opf:manifest/>
-      </opf:package>
-    </x:context>
-    <x:expect label="accessModeSufficient meta is present"
-              test="exists(//opf:meta[@property='schema:accessModeSufficient'])"/>
-  </x:scenario>
-
-  <x:scenario label="longDescription value is present in accessibilityFeature">
-    <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
-      </opf:package>
-    </x:context>
-    <x:expect label="longDescription accessibilityFeature meta is present"
-              test="exists(//opf:meta[@property='schema:accessibilityFeature' and . = 'longDescription'])"/>
-  </x:scenario>
-
-  <x:scenario label="metadata values are in the content attribute">
-    <x:context>
-      <opf:package>
-        <opf:metadata><dc:title>Book</dc:title></opf:metadata>
-      </opf:package>
-    </x:context>
-    <x:expect label="accessMode meta uses content attribute, not text node"
-              test="exists(//opf:meta[@property='schema:accessMode']/@content)"/>
+    <x:expect label="alternativeText is absent"
+              test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'alternativeText')"/>
+    <x:expect label="longDescription is absent"
+              test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'longDescription')"/>
   </x:scenario>
 
 </x:description>

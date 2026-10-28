@@ -205,12 +205,48 @@
     </px:dtbook-to-epub3>
 
     <!-- ======================== -->
+    <!-- SBS post-processing      -->
+    <!-- ======================== -->
+
+    <p:for-each name="postprocess">
+        <p:iteration-source>
+            <p:pipe step="convert" port="result.in-memory"/>
+        </p:iteration-source>
+        <p:output port="result" sequence="true"/>
+        <p:choose>
+            <p:when test="ends-with(base-uri(/*), '.opf')">
+                <p:variable name="opf-uri" select="base-uri(/*)"/>
+                <!-- the XSLT derives the features from the images in the content documents -->
+                <p:wrap-sequence wrapper="c:wrapper">
+                    <p:input port="source">
+                        <p:pipe step="convert" port="result.in-memory"/>
+                    </p:input>
+                </p:wrap-sequence>
+                <p:xslt>
+                    <p:input port="parameters"><p:empty/></p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/package-doc.sbs.xsl"/>
+                    </p:input>
+                    <!-- keep the base URI so that the document still matches the fileset -->
+                    <p:with-option name="output-base-uri" select="$opf-uri"/>
+                </p:xslt>
+            </p:when>
+            <p:otherwise>
+                <p:identity/>
+            </p:otherwise>
+        </p:choose>
+    </p:for-each>
+
+    <!-- ======================== -->
     <!-- Store EPUB to output-dir -->
     <!-- ======================== -->
 
     <px:epub3-store name="store">
+        <p:input port="fileset.in">
+            <p:pipe step="convert" port="result.fileset"/>
+        </p:input>
         <p:input port="in-memory.in">
-            <p:pipe step="convert" port="result.in-memory"/>
+            <p:pipe step="postprocess" port="result"/>
         </p:input>
         <p:with-option name="href" select="concat($output-dir,$output-name,'.epub')"/>
     </px:epub3-store>
