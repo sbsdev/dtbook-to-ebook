@@ -1,0 +1,183 @@
+#+options: todo:t
+#+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
+#+language: en
+
+* PROPOSED ADR-0006: Adopt the Nordic Guidelines 2025-1 as the SBS EPUB standard
+- Deciders :: CE, to be discussed within SBS
+- Date :: [2026-10-28 Mi]
+
+** Context and Problem Statement
+
+The goal of [[file:0001-standalone-module.org][ADR-0001]] was to keep the generated EPUBs identical to the
+ones produced by the old fork. The first regression runs show that
+this goal needs a closer look, because the old output is not a
+standard worth reproducing.
+
+The old fork is derived from the Nordic EPUB3 DTBook Migrator and
+declares ~nordic:guidelines~ 2015-1 in every EPUB. Since then:
+
+- The guidelines have moved on twice, to 2020-1 and 2025-1
+  ([[https://format.mtm.se/nordic_epub/2025-1/][Nordic Guidelines 2025-1]], published 2025-09-19, based on EPUB 3.3,
+  EPUB Accessibility 1.1 and DPUB-ARIA 1.1).
+- The SBS fork has drifted from 2015-1 through local changes that
+  were never reconciled with the guidelines.
+
+So our current "standard" is an undocumented mix of a ten year old
+guideline and SBS patches. Notes are a concrete example. The old fork
+produces
+
+#+begin_src html
+<body epub:type="backmatter footnotes">
+  <h1>Fussnoten</h1>
+  <ol epub:type="footnotes">
+    <li class="notebody" epub:type="footnote">
+      <p>…</p>
+      <p><a href="…">Zurück</a></p>
+    </li>
+#+end_src
+
+which uses ~footnotes~, a value that is not in the EPUB Structural
+Semantics Vocabulary, puts footnote semantics on list items (which
+breaks the list for assistive technology), has no ARIA roles on note
+references and no ~doc-backlink~ role on backlinks. The new module
+currently produces plain ~<aside>~ elements without any semantics,
+which is worse. Either way, the question is what to aim for.
+
+SBS is one of the organisations that develop the Nordic Guidelines
+(listed in their introduction alongside Celia, Dedicon, HBS, MTM, NB,
+Nota, SPSM and Statped).
+
+** Decision Drivers
+
+- Accessibility :: Reading systems and assistive technology rely on
+  correct ARIA roles and ~epub:type~ values (notes, page breaks,
+  sections, landmarks).
+- A documented standard :: Today the SBS EPUB format is defined by
+  what the old code happens to produce. A published guideline can be
+  pointed to, discussed and versioned.
+- Sharing with other agencies :: SBS co-develops the Nordic
+  Guidelines. Producing to them makes exchanging titles with partner
+  agencies easier and lets SBS benefit from their tooling and
+  experience.
+- Maintenance :: The upstream DAISY Pipeline follows current
+  standards. Every SBS-specific deviation is code SBS has to write,
+  test and keep alive (see [[file:0001-standalone-module.org][ADR-0001]]).
+- Migration cost :: Changing the format affects downstream consumers
+  and the regression strategy.
+
+** Considered Options
+
+- A :: Reproduce the output of the old fork as closely as possible.
+- B :: Fix only the obvious defects (e.g. note semantics) with
+  current best practice, and otherwise keep the old output.
+- C :: Adopt the Nordic Guidelines 2025-1 as the SBS EPUB standard,
+  with a short, explicit list of SBS deviations.
+
+** Decision Outcome
+
+Proposed option: *C*, adopt the Nordic Guidelines 2025-1.
+
+The SBS requirements in [[file:../Requirements.org][Requirements.org]] remain, but each one is
+checked against the guidelines: where the guidelines cover it, we
+follow the guidelines; where SBS really needs something different, it
+is kept as a documented deviation.
+
+*** What changes, by example
+
+| Area              | Current SBS output                                         | Nordic 2025-1                                                                                                   |
+|-------------------+------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------|
+| Note references   | ~epub:type="noteref"~ only                                 | ~role="doc-noteref" epub:type="noteref"~, unique ~id~, no ~<sup>~                                               |
+| Numbered notes    | ~<ol epub:type="footnotes">~, ~<li epub:type="footnote">~  | ~<section role="doc-endnotes" epub:type="endnotes">~ with a heading and a plain ~<ol>~/~<li>~                   |
+| Note placement    | all notes in one "Fussnoten" file at the end of the book   | at the end of each content file, German heading "Anmerkungen"                                                   |
+| Backlinks         | "Zurück", no role                                          | ~role="doc-backlink"~, in its own paragraph, text contains the note number (German: "Gehe zur Referenz #.")     |
+| Section semantics | ~epub:type~ on ~<body>~                                    | ~role~ and ~epub:type~ (partition + division) on the top level ~<section>~, labelled via ~aria-labelledby~      |
+| File naming       | ~[UID]-8-footnotes.xhtml~ (2015-1 scheme, no zero padding) | ~[UID]-[XXX]-[role].xhtml~, e.g. ~X41001A-010-chapter.xhtml~                                                    |
+| Metadata          | ~nordic:guidelines~ 2015-1                                 | ~nordic:guidelines~ 2025-1, ~dcterms:conformsTo~ link to the guidelines, ~a11y:certifiedBy~                     |
+| CSS               | ~css/accessibility.css~                                    | the agency's standard CSS in ~css/~, linked from each content document; ~accessibility.css~ fits this unchanged |
+
+Things SBS already does that the guidelines allow: the caption may be
+the first child of the ~<figure>~, and the agency may add a legal page
+(our boilerplate) to the frontmatter.
+
+*** Positive Consequences
+
+- EPUBs that follow a current, published and versioned standard which
+  SBS co-develops, instead of an undocumented drifted one.
+- Correct semantics for assistive technology, notably for notes, page
+  breaks and sections.
+- Less SBS-specific code: the upstream DAISY Pipeline follows the same
+  underlying standards (EPUB 3.3, DPUB-ARIA), so many differences
+  disappear by themselves.
+- The regression run can check conformance to a written standard
+  rather than equality with output nobody wants to keep.
+
+*** Negative Consequences
+
+- EPUBs produced after the switch differ from the existing ones.
+  Downstream consumers have to be checked: the online player, the
+  catalogue/distribution, and any customer-facing reading
+  instructions that mention "Zurück" or the note layout.
+- ~compare-epub.bb~ has to change its role: prod is no longer the
+  reference. Dimensions become "conforms to Nordic 2025-1" checks
+  (with prod only as a source of the expected text content).
+- Some parts of the guidelines describe manual production (alt text
+  categories, editing instructions, image editing). These have to be
+  scoped out explicitly, since our input is DTBook produced in-house.
+- Moving the notes to the end of each content file changes an
+  established SBS reading experience and needs agreement from the
+  people who define the SBS e-book product.
+
+** Pros and Cons of the Options
+
+*** A — Reproduce the old output
+
+- Good :: No change for readers and downstream consumers.
+- Good :: Regression testing against prod is straightforward.
+- Bad :: Preserves known accessibility defects (non-standard
+  ~epub:type~ values, missing ARIA roles).
+- Bad :: SBS has to write and maintain code that undoes what the
+  upstream converter does correctly.
+- Bad :: The format stays undocumented.
+
+*** B — Fix only the obvious defects
+
+- Good :: Small, targeted changes; mostly familiar output.
+- Bad :: Every fix is an ad-hoc decision without a reference; the
+  next question ("which ~epub:type~ for this section?") has to be
+  decided from scratch again.
+- Bad :: Still claims conformance to a guideline version (2015-1) the
+  output no longer matches.
+
+*** C — Adopt the Nordic Guidelines 2025-1
+
+- Good :: One documented reference for every markup question.
+- Good :: SBS is a participating agency; aligns SBS with its partners.
+- Good :: Closest to what the upstream converter already produces.
+- Bad :: Visible changes for readers (notes, backlink texts, file
+  names).
+- Bad :: Requires an internal decision and downstream checks before
+  rollout.
+
+** Open Questions for the Internal Discussion
+
+1. Do we follow the guidelines on note placement (end of each content
+   file), or keep a single notes section at the end of the book as a
+   documented SBS deviation?
+2. Fixed texts: the Nordic German wordings ("Anmerkungen" as the notes
+   heading, "Gehe zur Referenz #." as backlink), or SBS wordings
+   ("Fussnoten", a backlink that includes the note number such as
+   "Zurück zur Referenz #.")?
+3. Which downstream systems depend on the current markup or file
+   names (online player, distribution, apps)?
+4. Is there a validator for Nordic 2025-1 we can run in the
+   regression test, or do we encode the relevant rules in
+   ~compare-epub.bb~?
+5. Which SBS requirements become documented deviations? Candidates:
+   boilerplate texts, ~accessibility.css~, the extended image
+   description boilerplate.
+
+** Links
+
+- [[https://format.mtm.se/nordic_epub/2025-1/][Nordic Guidelines for the Production of Accessible EPUB 3 (2025-1)]]
+- [[https://github.com/nlbdev/nordic-accessible-epub-guidelines][Source of the guidelines]]
+- [[https://kb.daisy.org/publishing/docs/html/notes.html][DAISY Knowledge Base: Notes]]
