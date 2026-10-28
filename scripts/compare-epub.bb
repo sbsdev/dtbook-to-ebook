@@ -214,7 +214,6 @@
        (map? node)
        (let [tag   (local-name (:tag node))
              attrs (->> (:attrs node)
-                        (remove (fn [[k _]] (str/starts-with? (str (namespace k)) "xmlns")))
                         (map (fn [[k v]] (normalise-attr k v)))
                         sort
                         (map (fn [[k v]] (format " %s=\"%s\"" k v)))
