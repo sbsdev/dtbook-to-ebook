@@ -2,11 +2,13 @@
 <!--
     Test-only wrapper around sbs:dtbook-to-ebook.
     Runs the full pipeline and exposes the generated EPUB's package.opf on the
-    primary output port so that xprocspec scenarios can assert on EPUB content.
+    primary output port, and its first content document on the content port, so that
+    xprocspec scenarios can assert on EPUB content.
 -->
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:sbs="http://www.sbs.ch/pipeline"
+                xmlns:opf="http://www.idpf.org/2007/opf"
                 type="sbs:dtbook-to-ebook-test-wrapper" name="main" version="1.0">
 
     <p:input port="source" primary="true"/>
@@ -15,6 +17,9 @@
 
     <p:output port="result" primary="true">
         <p:pipe step="unzip-opf" port="result"/>
+    </p:output>
+    <p:output port="content" primary="false">
+        <p:pipe step="unzip-content" port="result"/>
     </p:output>
     <p:output port="status" primary="false">
         <p:pipe step="convert" port="status"/>
@@ -34,6 +39,15 @@
     <px:unzip name="unzip-opf">
         <p:with-option name="href" select="concat($output-dir, $output-name, '.epub')"/>
         <p:with-option name="file" select="'EPUB/package.opf'"/>
+    </px:unzip>
+
+    <!-- the first content document in the spine -->
+    <px:unzip name="unzip-content">
+        <p:with-option name="href" select="concat($output-dir, $output-name, '.epub')"/>
+        <p:with-option name="file"
+            select="concat('EPUB/', (//opf:item[@id = //opf:itemref/@idref][not(@properties = 'nav')])[1]/@href)">
+            <p:pipe step="unzip-opf" port="result"/>
+        </p:with-option>
     </px:unzip>
 
 </p:declare-step>

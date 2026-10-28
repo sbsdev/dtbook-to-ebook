@@ -4,6 +4,7 @@
                xmlns:c="http://www.w3.org/ns/xproc-step"
                xmlns:opf="http://www.idpf.org/2007/opf"
                xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:html="http://www.w3.org/1999/xhtml"
                script="dtbook-to-ebook-test-wrapper.xpl">
 
     <x:scenario label="convert a minimal DTBook to EPUB3">
@@ -51,6 +52,14 @@
                   type="xpath" test="/opf:package/@xml:lang = 'de'"/>
         <x:expect label="the package document declares an accessibility access mode"
                   type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessMode'])"/>
+        <x:expect label="the manifest contains accessibility.css"
+                  type="xpath" test="exists(/opf:package/opf:manifest/opf:item[@href='css/accessibility.css'][@media-type='text/css'])"/>
+
+        <x:context label="the first content document">
+            <x:document type="port" port="content"/>
+        </x:context>
+        <x:expect label="the content document links accessibility.css"
+                  type="xpath" test="exists(/html:html/html:head/html:link[@rel='stylesheet'][ends-with(@href, 'css/accessibility.css')])"/>
 
     </x:scenario>
 

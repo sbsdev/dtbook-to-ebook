@@ -44,6 +44,7 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-epub3/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
 
     <!-- Derive EPUB output name from the source document's filename (prologue variable) -->
     <p:variable name="output-name"
@@ -182,6 +183,19 @@
 
     <p:identity name="dtbook-preprocessed"/>
 
+    <!-- epub-stylesheet must be a file on disk, but the CSS ships inside the module jar -->
+    <px:mkdir name="mkdir-css">
+        <p:with-option name="href" select="concat($temp-dir,'css/')"/>
+    </px:mkdir>
+    <px:copy-resource name="copy-css">
+        <p:with-option name="href" select="resolve-uri('../../css/accessibility.css')"/>
+        <!-- the pipe only orders the copy after the mkdir -->
+        <p:with-option name="target" select="concat($temp-dir,'css/accessibility.css')">
+            <p:pipe step="mkdir-css" port="result"/>
+        </p:with-option>
+    </px:copy-resource>
+    <p:sink/>
+
     <!-- ======================== -->
     <!-- Standard DAISY Pipeline  -->
     <!-- conversion to EPUB3      -->
@@ -198,6 +212,9 @@
             <p:empty/>
         </p:input>
         <p:with-option name="audio" select="'false'"/>
+        <p:with-option name="epub-stylesheet" select="string(/*)">
+            <p:pipe step="copy-css" port="result"/>
+        </p:with-option>
         <p:with-option name="output-dir" select="concat($temp-dir,'epub3/')"/>
         <p:with-option name="output-name" select="$output-name"/>
         <p:with-option name="temp-dir" select="concat($temp-dir,'dtbook-to-epub3/')"/>
