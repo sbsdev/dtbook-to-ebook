@@ -26,7 +26,8 @@
                             <bodymatter>
                                 <level1>
                                     <h1>Kapitel 1</h1>
-                                    <p>Hallo Welt.</p>
+                                    <p>Hallo Welt.<noteref idref="#n1">1</noteref></p>
+                                    <note id="n1"><p>Eine Anmerkung.</p></note>
                                 </level1>
                             </bodymatter>
                         </book>
@@ -65,11 +66,13 @@
         <x:expect label="the manifest contains accessibility.css"
                   type="xpath" test="exists(/opf:package/opf:manifest/opf:item[@href='css/accessibility.css'][@media-type='text/css'])"/>
 
-        <x:context label="the first content document">
+        <x:context label="the last content document">
             <x:document type="port" port="content"/>
         </x:context>
         <x:expect label="the content document links accessibility.css"
                   type="xpath" test="exists(/html:html/html:head/html:link[@rel='stylesheet'][ends-with(@href, 'css/accessibility.css')])"/>
+        <x:expect label="the note is in an endnotes section with a backlink to its reference"
+                  type="xpath" test="exists(//html:section[@role='doc-endnotes']/html:ol/html:li[@id = substring-after(//html:a[@role='doc-noteref']/@href, '#')]/html:p/html:a[@role='doc-backlink'][@href = concat('#', //html:a[@role='doc-noteref']/@id)])"/>
 
     </x:scenario>
 

@@ -35,12 +35,14 @@
         <text xml:lang="it">Senza Titolo</text>
         <text xml:lang="rm-sursilv">Senza tetel</text>
     </translation>
-    <translation string="back">
-        <text xml:lang="de">Zurück</text>
-        <text xml:lang="de-CH">Zurück</text>
-        <text xml:lang="de-DE">Zurück</text>
-        <text xml:lang="it">Indietro</text>
-        <text xml:lang="rm-sursilv">Anavos</text>
+    <!-- Nordic Guidelines 2025-1, 5.1.6; "#" is replaced by the note number -->
+    <translation string="backlink">
+        <text xml:lang="de">Gehe zur Referenz #.</text>
+        <text xml:lang="de-CH">Gehe zur Referenz #.</text>
+        <text xml:lang="de-DE">Gehe zur Referenz #.</text>
+        <text xml:lang="en">Go to note reference #.</text>
+        <text xml:lang="it">Torna al riferimento #.</text>
+        <text xml:lang="rm-sursilv">Anavos tar la referenza #.</text>
     </translation>
     <translation string="image-description">
         <text xml:lang="de">Bildbeschreibung</text>
@@ -49,12 +51,14 @@
         <text xml:lang="it">Descrizione dell'immagine</text>
         <text xml:lang="rm-sursilv">Descripziun dil maletg</text>
     </translation>
-    <translation string="footnotes">
-        <text xml:lang="de">Fussnoten</text>
-        <text xml:lang="de-CH">Fussnoten</text>
-        <text xml:lang="de-DE">Fussnoten</text>
-        <text xml:lang="it">Nota a pie' di pagina</text>
-        <text xml:lang="rm-sursilv">Annotaziun</text>
+    <!-- Nordic Guidelines 2025-1, 5.1.5 -->
+    <translation string="endnotes">
+        <text xml:lang="de">Anmerkungen</text>
+        <text xml:lang="de-CH">Anmerkungen</text>
+        <text xml:lang="de-DE">Anmerkungen</text>
+        <text xml:lang="en">Notes</text>
+        <text xml:lang="it">Note</text>
+        <text xml:lang="rm-sursilv">Annotaziuns</text>
     </translation>
     <translation string="about-book">
         <text xml:lang="de">Zu diesem Buch</text>

@@ -159,27 +159,6 @@
         </p:input>
     </p:xslt>
 
-    <p:xslt name="move-footnotes-to-rearmatter">
-        <p:input port="parameters"><p:empty/></p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/moveFootnotesToRear.xsl"/>
-        </p:input>
-    </p:xslt>
-
-    <p:xslt name="add-anchors-before-noterefs">
-        <p:input port="parameters"><p:empty/></p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/addFootnoteAnchor.xsl"/>
-        </p:input>
-    </p:xslt>
-
-    <p:xslt name="add-backlinks-to-footnotes">
-        <p:input port="parameters"><p:empty/></p:input>
-        <p:input port="stylesheet">
-            <p:document href="../xslt/addFootnoteBacklinks.xsl"/>
-        </p:input>
-    </p:xslt>
-
     <p:identity name="dtbook-preprocessed"/>
 
     <!-- ======================== -->
@@ -208,6 +187,16 @@
     <!-- SBS post-processing      -->
     <!-- ======================== -->
 
+    <!-- the content documents with their base URI made explicit, so that
+         notes.sbs.xsl knows which file a note reference is in -->
+    <p:for-each name="content-docs">
+        <p:iteration-source select="/*:html">
+            <p:pipe step="convert" port="result.in-memory"/>
+        </p:iteration-source>
+        <p:output port="result" sequence="true"/>
+        <p:add-xml-base/>
+    </p:for-each>
+
     <p:for-each name="postprocess">
         <p:iteration-source>
             <p:pipe step="convert" port="result.in-memory"/>
@@ -233,6 +222,24 @@
                                   select="(/*/*:head/*:meta[lower-case(@name)=('dc:identifier','dtb:uid')]/@content)[1]">
                         <p:pipe step="dtbook-source" port="result"/>
                     </p:with-param>
+                </p:xslt>
+            </p:when>
+            <p:when test="/*:html">
+                <p:variable name="html-uri" select="base-uri(/*)"/>
+                <p:add-xml-base/>
+                <p:identity name="current"/>
+                <p:wrap-sequence wrapper="c:wrapper">
+                    <p:input port="source">
+                        <p:pipe step="current" port="result"/>
+                        <p:pipe step="content-docs" port="result"/>
+                    </p:input>
+                </p:wrap-sequence>
+                <p:xslt>
+                    <p:input port="parameters"><p:empty/></p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/notes.sbs.xsl"/>
+                    </p:input>
+                    <p:with-option name="output-base-uri" select="$html-uri"/>
                 </p:xslt>
             </p:when>
             <p:otherwise>
