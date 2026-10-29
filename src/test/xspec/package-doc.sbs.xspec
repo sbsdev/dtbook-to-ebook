@@ -84,8 +84,8 @@
     </x:context>
     <x:expect label="the prefixed a11y:pageBreakSource is removed"
               test="empty(//opf:meta[@property='a11y:pageBreakSource'])"/>
-    <x:expect label="the source of the page breaks uses the EPUB 3.4 pageBreakSource"
-              test="//opf:meta[@property='pageBreakSource'] = '978-3-15-014331-5'"/>
+    <x:expect label="the source of the page breaks uses the EPUB 3.4 pageBreakSource, with the ISBN as URN"
+              test="//opf:meta[@property='pageBreakSource'] = 'urn:isbn:9783150143315'"/>
   </x:scenario>
 
   <x:scenario label="the identifier comes from the DTBook">
@@ -98,8 +98,8 @@
         </opf:package>
       </wrapper>
     </x:context>
-    <x:expect label="the unique identifier is the one passed in"
-              test="//dc:identifier[@id='pub-id'] = 'sbs-uid'"/>
+    <x:expect label="the unique identifier is the one passed in, with the id of the guidelines"
+              test="/opf:package/@unique-identifier = 'pub-identifier' and //dc:identifier[@id='pub-identifier'] = 'sbs-uid'"/>
   </x:scenario>
 
   <x:scenario label="a book with described images">
@@ -141,6 +141,51 @@
               test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'alternativeText')"/>
     <x:expect label="longDescription is absent"
               test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'longDescription')"/>
+  </x:scenario>
+
+  <x:scenario label="the metadata of the Nordic Guidelines">
+    <x:context>
+      <wrapper>
+        <opf:package prefix="dcterms: http://purl.org/dc/terms/" unique-identifier="pub-id">
+          <opf:metadata>
+            <dc:title id="id_1">Book</dc:title>
+            <opf:meta refines="#id_1" property="title-type">main</opf:meta>
+            <dc:source>Ein Verlag, 2020</dc:source>
+            <opf:meta property="schema:accessibilityFeature">tableOfContents</opf:meta>
+            <opf:meta property="schema:accessibilityFeature">pageNavigation</opf:meta>
+            <opf:meta property="a11y:pageBreakSource">Ein Verlag, 2020</opf:meta>
+          </opf:metadata>
+        </opf:package>
+      </wrapper>
+    </x:context>
+    <x:expect label="the nordic prefix is declared"
+              test="/opf:package/@prefix = 'dcterms: http://purl.org/dc/terms/ nordic: http://www.mtm.se/epub/'"/>
+    <x:expect label="the title has the id of the guidelines"
+              test="//dc:title/@id = 'title' and //opf:meta[@property='title-type']/@refines = '#title'"/>
+    <x:expect label="the version of the guidelines is given twice"
+              test="//opf:meta[@property='nordic:guidelines'] = '2025-1'
+                    and //opf:link[@rel='dcterms:conformsTo']/@href = 'https://format.mtm.se/nordic_epub/2025-1'"/>
+    <x:expect label="the publication claims conformance with EPUB Accessibility 1.1 and WCAG 2.1 AA"
+              test="//opf:meta[@property='dcterms:conformsTo'] = 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA'"/>
+    <x:expect label="SBS is supplier and certifier"
+              test="//opf:meta[@property='nordic:supplier'] = 'SBS' and //opf:meta[@property='a11y:certifiedBy'] = 'SBS'"/>
+    <x:expect label="the features of the guidelines are added once, page break markers with the page navigation"
+              test="string-join(//opf:meta[@property='schema:accessibilityFeature'], ',')
+                    = 'tableOfContents,pageNavigation,displayTransformability,structuralNavigation,readingOrder,pageBreakMarkers'"/>
+    <x:expect label="a page source that is not an ISBN is kept as is"
+              test="//opf:meta[@property='pageBreakSource'] = 'Ein Verlag, 2020'"/>
+    <x:expect label="there is no accessibility summary"
+              test="empty(//opf:meta[@property='schema:accessibilitySummary'])"/>
+  </x:scenario>
+
+  <x:scenario label="a book without page numbers">
+    <x:context>
+      <wrapper>
+        <opf:package><opf:metadata><dc:title>Book</dc:title></opf:metadata></opf:package>
+      </wrapper>
+    </x:context>
+    <x:expect label="has no page break markers"
+              test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'pageBreakMarkers')"/>
   </x:scenario>
 
 </x:description>

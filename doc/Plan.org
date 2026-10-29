@@ -125,7 +125,26 @@ in [[file:Deviations.org][Deviations.org]].
 - [X] Book title: ~<h1 class="title" epub:type="title">~, not listed in the
   TOC; the rank waits for [[https://github.com/daisy/pipeline/issues/912][daisy/pipeline#912]]
   (~addClasses.xsl~, ~toc.sbs.xsl~)
-- [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
+- [X] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
+  (~package-doc.sbs.xsl~)
+- [ ] ~dc:publisher~: full name or "SBS"? To be decided with marketing
+
+*** Backing the accessibility claim
+The package document claims ~EPUB Accessibility 1.1 - WCAG 2.1 Level AA~
+(~dcterms:conformsTo~), certified by SBS (~a11y:certifiedBy~). No tool
+proves WCAG conformance on its own; together these make the claim
+defensible:
+- [ ] Automated checks on every book: run DAISY Ace (~@daisy/ace~, axe-core
+  plus the EPUB Accessibility metadata) in ~compare-epub.bb~ next to
+  EPUBCheck. It covers the machine-checkable part of WCAG, roughly a third.
+- [ ] One manual review of a representative sample (images, tables, notes,
+  poems), documented with DAISY SMART (https://smart.daisy.org): reading
+  order, meaningful alt texts, colour contrast of ~accessibility.css~. All
+  books come from the same converter, so a sample suffices; the report is
+  the evidence behind ~a11y:certifiedBy~.
+- [ ] Make the claim conditional per book on what the converter cannot fix,
+  above all images without alt text (WCAG 1.1.1); ~package-doc.sbs.xsl~
+  already knows whether the images have one.
 
 ** TODO Phase 5 — Regression run
 - [X] Write ~scripts/compare-epub.bb~ (tested on one document)

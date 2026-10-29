@@ -70,6 +70,8 @@
                   type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessMode'])"/>
         <x:expect label="the SBS post-processing adds accessModeSufficient"
                   type="xpath" test="exists(/opf:package/opf:metadata/opf:meta[@property='schema:accessModeSufficient'])"/>
+        <x:expect label="the package document declares the version of the Nordic Guidelines"
+                  type="xpath" test="/opf:package/opf:metadata/opf:meta[@property='nordic:guidelines'] = '2025-1' and contains(/opf:package/@prefix, 'nordic: http://www.mtm.se/epub/')"/>
         <x:expect label="the manifest contains accessibility.css"
                   type="xpath" test="exists(/opf:package/opf:manifest/opf:item[@href='css/accessibility.css'][@media-type='text/css'])"/>
 
