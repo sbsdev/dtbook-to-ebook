@@ -1,0 +1,56 @@
+#+title: Deviations from the Production EPUBs
+#+language: en
+
+Since [[file:adr/0006-nordic-guidelines.org][ADR-0006]] the goal is no longer to reproduce the EPUBs of the old
+fork, but to follow EPUB 3 and the Nordic Guidelines 2025-1, using
+upstream DAISY Pipeline functionality wherever possible. This file
+collects where the new EPUBs differ from prod and why, as the basis
+for the review with marketing. [[file:Requirements.org][Requirements.org]] remains the record of
+what the prod EPUBs implement.
+
+Reasons:
+- Guidelines :: required by the Nordic Guidelines 2025-1
+- EPUB :: required by EPUB 3.3/3.4 or flagged by EPUBCheck
+- Upstream :: what the upstream converter produces, not changed by us
+
+Status:
+- done :: the new output is as described
+- open :: the new output still differs from the guidelines, see Phase 3b in [[file:Plan.org][Plan.org]]
+- regression :: differs from prod and from the guidelines only because of
+  upstream; will be fixed back to prod, and the row removed once it is
+
+Observed on document 13879 ("Das Herz eines Boxers").
+
+* Content documents
+
+| Area              | Prod                                                                 | New                                                                                                                  | Reason     | Status     |
+|-------------------+----------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------+------------+------------|
+| Note placement    | all notes in one "Fussnoten" file at the end of the book             | ~<section role="doc-endnotes" epub:type="endnotes">~ "Anmerkungen" with an ~ol~ at the end of each top-level section | Guidelines | done       |
+| Note references   | empty ~<a id>~ before a ~noteref~ without role                       | ~id~ on the ~<a role="doc-noteref" epub:type="noteref">~ itself                                                      | Guidelines | done       |
+| Backlinks         | "Zurück"                                                             | "Gehe zur Referenz 1." with ~role="doc-backlink"~                                                                    | Guidelines | done       |
+| Heading ranks     | ~h1~ for top-level sections                                          | ~h3~                                                                                                                 | Upstream   | regression |
+| Section semantics | ~epub:type="bodymatter chapter"~ on ~<body>~                         | ~epub:type="bodymatter"~ on ~<body>~; the guidelines want ~role~ and ~epub:type~ on the top-level ~<section>~        | Upstream   | open       |
+| Untitled sections | invented headings, e.g. "Bibliographische Angaben" on the title page | same (~addEmptyHeaders.xsl~); the guidelines want an ~aria-label~                                                    | Guidelines | open       |
+| Book title        | ~<h1 class="title" epub:type="fulltitle">~                           | ~<h3 epub:type="title">~; the guidelines want ~<h1 class="title" epub:type="title">~                                 | Upstream   | open       |
+| Page breaks       | ~class="page-normal"~, ~title="57"~                                  | ~role="doc-pagebreak"~, ~aria-label=" 50. "~; the guidelines want ~aria-label="50"~ and a ~class~                    | Upstream   | open       |
+| Element ids       | derived from the DTBook (~level1_4~, ~h1_2~)                         | generated (~id_34~)                                                                                                  | Upstream   | done       |
+
+* Files
+
+| Area                | Prod                                     | New                                                           | Reason   | Status     |
+|---------------------+------------------------------------------+---------------------------------------------------------------+----------+------------|
+| Splitting           | one file per top-level section (8 files) | one file per frontmatter, bodymatter, backmatter (3 files)    | Upstream | regression |
+| File names          | ~[UID]-8-footnotes.xhtml~                | ~[UID]-3.xhtml~; the guidelines want ~[UID]-003-[role].xhtml~ | Upstream | open       |
+| Navigation document | ~nav.xhtml~ plus an EPUB 2 ~nav.ncx~     | ~toc.xhtml~, no NCX (optional in EPUB 3)                      | Upstream | done       |
+| MODS record         | none                                     | none (upstream adds ~zedai-mods.xml~, we remove it)           | —        | done       |
+
+* Package document
+
+| Area                   | Prod                                                       | New                                              | Reason     | Status |
+|------------------------+------------------------------------------------------------+--------------------------------------------------+------------+--------|
+| ~dc:format~            | ~EPUB3~                                                    | none                                             | Upstream   | done   |
+| Page source            | ~dc:source~ only                                           | additionally ~<meta property="pageBreakSource">~ | Upstream   | done   |
+| EPUB 2 metadata        | every ~meta~ repeated as ~<meta name content>~             | none                                             | Upstream   | done   |
+| Guidelines version     | ~nordic:guidelines~ 2015-1                                 | none yet; to be 2025-1 with ~dcterms:conformsTo~ | Guidelines | open   |
+| Accessibility features | ~structuralNavigation~, ~readingOrder~, ~printPageNumbers~ | ~tableOfContents~, ~pageNavigation~              | Upstream   | open   |
+| Accessibility summary  | "This publication conforms to WCAG 2.0 Level AA"           | none                                             | Upstream   | open   |

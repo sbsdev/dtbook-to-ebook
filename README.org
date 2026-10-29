@@ -71,7 +71,8 @@ DTBook
 * SBS Requirements
 
 For the full list of SBS-specific requirements that this module
-implements, see [[file:doc/Requirements.org][doc/Requirements.org]].
+implements, see [[file:doc/Requirements.org][doc/Requirements.org]]. Where the generated EPUBs
+deliberately differ from the old ones, see [[file:doc/Deviations.org][doc/Deviations.org]].
 
 * Regression testing
 

@@ -102,6 +102,20 @@ server that have an EPUB product. 100 documents gives good coverage.
 - Add one end-to-end Maven integration test: real DTBook fixture,
   assert on EPUB content
 
+** TODO Phase 3b — Nordic Guidelines 2025-1
+Per [[file:adr/0006-nordic-guidelines.org][ADR-0006]], post-process the upstream HTML towards the guidelines
+instead of reproducing the old EPUBs. Record every difference from prod
+in [[file:Deviations.org][Deviations.org]].
+- [X] Notes: endnotes sections, note reference ids, backlinks
+  (~notes.sbs.xsl~); drop ~moveFootnotesToRear~, ~addFootnoteAnchor~,
+  ~addFootnoteBacklinks~
+- [ ] Heading ranks: upstream emits ~h3~ for top-level headings
+- [ ] Top-level sections: ~role~, ~epub:type~, ~aria-labelledby~
+- [ ] Untitled sections: ~aria-label~ instead of ~addEmptyHeaders~
+- [ ] Page breaks: ~aria-label~ without spaces and dot, ~class~
+- [ ] File splitting and naming (~[UID]-[XXX]-[role].xhtml~)
+- [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
+
 ** TODO Phase 5 — Regression run
 - [X] Write ~scripts/compare-epub.bb~ (tested on one document)
 - [ ] Deploy this module to the test instance (xmlp04), see below

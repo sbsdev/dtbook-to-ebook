@@ -53,7 +53,8 @@ Every SBS requirement in `doc/Requirements.org` must be covered by an XSpec test
 ## Key documentation
 
 - `doc/adr/` — architecture decision records, one per file, indexed in `doc/adr/README.org`
-- `doc/Requirements.org` — full list of SBS-specific requirements (CSS, boilerplate, content structure, images/captions, OPF accessibility metadata, navigation, i18n)
+- `doc/Requirements.org` — full list of SBS-specific requirements (CSS, boilerplate, content structure, images/captions, OPF accessibility metadata, navigation, i18n) behind the prod EPUBs
+- `doc/Deviations.org` — where the new EPUBs differ from prod and why (ADR-0006: guidelines first)
 
 ## Regression testing
 

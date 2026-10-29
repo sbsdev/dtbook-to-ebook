@@ -8,6 +8,10 @@ must be covered by an XSpec test.
 Commit references point to the old [[https://github.com/sbsdev/pipeline][sbsdev/pipeline]] repository where
 each requirement was originally implemented.
 
+These are the requirements behind the prod EPUBs. Since [[file:adr/0006-nordic-guidelines.org][ADR-0006]] the
+EPUB standard and the Nordic Guidelines 2025-1 take precedence; where
+the new EPUBs differ from prod is collected in [[file:Deviations.org][Deviations.org]].
+
 * CSS / Visual appearance
 
 | Requirement                                   | Commit  | Implementation                          |
