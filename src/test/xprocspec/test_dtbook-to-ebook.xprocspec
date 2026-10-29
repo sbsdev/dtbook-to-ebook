@@ -43,6 +43,12 @@
         <x:expect label="the output directory contains an EPUB file"
                   type="xpath" test="exists(/c:directory/c:file[ends-with(@name, '.epub')])"/>
 
+        <x:context label="the EPUB">
+            <x:document type="zip" base-uri="temp-dir" href="output/minimal.epub"/>
+        </x:context>
+        <x:expect label="the EPUB does not contain the MODS record of the intermediate ZedAI"
+                  type="xpath" test="exists(/c:zipfile/c:file) and empty(/c:zipfile/c:file[ends-with(@name, 'zedai-mods.xml')])"/>
+
         <x:context label="the package document">
             <x:document type="port" port="result"/>
         </x:context>

@@ -47,6 +47,48 @@
               test="empty(//opf:meta[@property]/@content)"/>
   </x:scenario>
 
+  <x:scenario label="leftovers of the intermediate ZedAI">
+    <x:context>
+      <c:wrapper>
+        <opf:package>
+          <opf:metadata>
+            <dc:title>Book</dc:title>
+            <dc:subject/>
+            <dc:description> </dc:description>
+            <dc:rights/>
+            <dc:format>ANSI/NISO Z39.86-2005</dc:format>
+            <opf:link rel="record" href="zedai-mods.xml" media-type="application/mods+xml"/>
+          </opf:metadata>
+        </opf:package>
+      </c:wrapper>
+    </x:context>
+    <x:expect label="empty DCMES elements are removed"
+              test="empty(//dc:*[not(normalize-space())])"/>
+    <x:expect label="dc:format is removed"
+              test="empty(//dc:format)"/>
+    <x:expect label="the link to the MODS record is removed"
+              test="empty(//opf:link[@rel='record'])"/>
+    <x:expect label="other metadata is kept"
+              test="//dc:title = 'Book'"/>
+  </x:scenario>
+
+  <x:scenario label="the source of the page breaks">
+    <x:context>
+      <c:wrapper>
+        <opf:package>
+          <opf:metadata>
+            <dc:source>978-3-15-014331-5</dc:source>
+            <opf:meta property="a11y:pageBreakSource">978-3-15-014331-5</opf:meta>
+          </opf:metadata>
+        </opf:package>
+      </c:wrapper>
+    </x:context>
+    <x:expect label="the prefixed a11y:pageBreakSource is removed"
+              test="empty(//opf:meta[@property='a11y:pageBreakSource'])"/>
+    <x:expect label="the source of the page breaks uses the EPUB 3.4 pageBreakSource"
+              test="//opf:meta[@property='pageBreakSource'] = '978-3-15-014331-5'"/>
+  </x:scenario>
+
   <x:scenario label="the identifier comes from the DTBook">
     <x:context>
       <c:wrapper>

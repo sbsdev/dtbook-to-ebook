@@ -42,6 +42,16 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- leftovers of the intermediate ZedAI: empty DCMES elements are invalid,
+       dc:format holds the DTBook format, and the MODS record is dropped from the EPUB -->
+  <xsl:template match="dc:*[not(normalize-space())]|dc:format|opf:link[@rel='record'][ends-with(@href,'zedai-mods.xml')]"/>
+
+  <!-- upstream still uses the incubation name a11y:pageBreakSource; EPUB 3.4 defines
+       pageBreakSource in the default vocabulary (daisy/pipeline-modules#197) -->
+  <xsl:template match="opf:meta/@property[. = 'a11y:pageBreakSource']">
+    <xsl:attribute name="property" select="'pageBreakSource'"/>
+  </xsl:template>
+
   <!-- replaced by the SBS values below -->
   <xsl:template match="opf:meta[@property=('schema:accessMode','schema:accessModeSufficient','schema:accessibilityHazard')]"/>
 

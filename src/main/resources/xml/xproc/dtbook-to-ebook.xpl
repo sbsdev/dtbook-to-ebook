@@ -241,13 +241,20 @@
         </p:choose>
     </p:for-each>
 
+    <!-- package-doc.sbs.xsl removes the link to the MODS record -->
+    <p:delete name="drop-mods" match="d:file[ends-with(@href,'zedai-mods.xml')]">
+        <p:input port="source">
+            <p:pipe step="convert" port="result.fileset"/>
+        </p:input>
+    </p:delete>
+
     <!-- ======================== -->
     <!-- Store EPUB to output-dir -->
     <!-- ======================== -->
 
     <px:epub3-store name="store">
         <p:input port="fileset.in">
-            <p:pipe step="convert" port="result.fileset"/>
+            <p:pipe step="drop-mods" port="result"/>
         </p:input>
         <p:input port="in-memory.in">
             <p:pipe step="postprocess" port="result"/>
