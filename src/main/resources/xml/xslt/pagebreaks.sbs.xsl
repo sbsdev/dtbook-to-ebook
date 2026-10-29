@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Page breaks as required by the Nordic Guidelines 2025-1 (ADR-0006),
-    "Pagination". The class comes from addPageClass.xsl.
+    "Pagination". The class comes from addClasses.xsl.
 
     - aria-label is the page number; upstream pads it as " 5. "
     - a page break between blocks is a div

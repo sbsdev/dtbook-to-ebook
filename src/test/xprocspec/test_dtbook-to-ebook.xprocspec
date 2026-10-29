@@ -88,6 +88,8 @@
         <x:context label="the first content document">
             <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/sbs-test-uid-12345-001-frontmatter.xhtml"/>
         </x:context>
+        <x:expect label="the book title and author have the classes of the guidelines"
+                  type="xpath" test="exists(//*[@epub:type='title'][tokenize(@class, '\s+') = 'title'][. = 'Minimal DTBook']) and //html:p[@class='docauthor'] = 'SBS Test'"/>
         <x:expect label="the untitled title page is labelled instead of getting a heading"
                   type="xpath" test="exists(//html:section[@aria-label='Titelseite'][empty(html:h1|html:h2|html:h3)])"/>
 
@@ -96,6 +98,8 @@
         </x:context>
         <x:expect label="the table of contents lists the title page with its label"
                   type="xpath" test="exists(//html:nav[@epub:type='toc']//html:a[. = 'Titelseite'])"/>
+        <x:expect label="the table of contents does not list the book title"
+                  type="xpath" test="exists(//html:nav[@epub:type='toc']//html:a) and empty(//html:nav[@epub:type='toc']//html:a[. = 'Minimal DTBook'])"/>
 
     </x:scenario>
 

@@ -158,10 +158,10 @@
         </p:input>
     </p:xslt>
 
-    <p:xslt name="add-page-class">
+    <p:xslt name="add-classes">
         <p:input port="parameters"><p:empty/></p:input>
         <p:input port="stylesheet">
-            <p:document href="../xslt/addPageClass.xsl"/>
+            <p:document href="../xslt/addClasses.xsl"/>
         </p:input>
     </p:xslt>
 
@@ -258,6 +258,20 @@
                     <p:input port="parameters"><p:empty/></p:input>
                     <p:input port="stylesheet">
                         <p:document href="../xslt/pagebreaks.sbs.xsl"/>
+                    </p:input>
+                    <p:with-option name="output-base-uri" select="$html-uri"/>
+                </p:xslt>
+                <p:identity name="processed"/>
+                <p:wrap-sequence wrapper="wrapper">
+                    <p:input port="source">
+                        <p:pipe step="processed" port="result"/>
+                        <p:pipe step="content-docs" port="result"/>
+                    </p:input>
+                </p:wrap-sequence>
+                <p:xslt>
+                    <p:input port="parameters"><p:empty/></p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/toc.sbs.xsl"/>
                     </p:input>
                     <p:with-option name="output-base-uri" select="$html-uri"/>
                 </p:xslt>

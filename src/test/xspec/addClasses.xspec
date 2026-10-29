@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Tests for the class of page numbers (Nordic Guidelines 2025-1, "Pagination") -->
+<!-- Tests for the classes required by the Nordic Guidelines 2025-1 ("Pagination", "Title Page") -->
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-               stylesheet="../../main/resources/xml/xslt/addPageClass.xsl">
+               stylesheet="../../main/resources/xml/xslt/addClasses.xsl">
 
   <x:scenario label="page numbers">
     <x:context>
@@ -18,6 +18,22 @@
               test="string-join(//dtb:pagenum/@class, ',') = 'page-front,page-normal,page-special,page-normal,x page-normal'"/>
     <x:expect label="keep their number and attributes"
               test="//dtb:pagenum[@id='p1'] = 'i' and //dtb:pagenum[@id='p1']/@page = 'front'"/>
+  </x:scenario>
+
+  <x:scenario label="the book title and author">
+    <x:context>
+      <dtb:book>
+        <dtb:frontmatter>
+          <dtb:doctitle>Titel</dtb:doctitle>
+          <dtb:docauthor class="x">Autorin</dtb:docauthor>
+        </dtb:frontmatter>
+        <dtb:bodymatter><dtb:level1><dtb:doctitle>Titel im Text</dtb:doctitle></dtb:level1></dtb:bodymatter>
+      </dtb:book>
+    </x:context>
+    <x:expect label="get the classes title and docauthor"
+              test="//dtb:frontmatter/dtb:doctitle/@class = 'title' and //dtb:frontmatter/dtb:docauthor/@class = 'x docauthor'"/>
+    <x:expect label="only in the frontmatter"
+              test="empty(//dtb:bodymatter//@class)"/>
   </x:scenario>
 
 </x:description>

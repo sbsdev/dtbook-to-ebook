@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the table of contents (Nordic Guidelines 2025-1, "EPUB 3 Navigation Document").
+     The context wraps the document, followed by all content documents. -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:epub="http://www.idpf.org/2007/ops"
+               xmlns:h="http://www.w3.org/1999/xhtml"
+               stylesheet="../../main/resources/xml/xslt/toc.sbs.xsl">
+
+  <x:scenario label="the navigation document">
+    <x:context>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
+          <nav epub:type="toc"><ol>
+            <li><a href="book-1.xhtml#id_1">Das Buch</a></li>
+            <li><a href="book-1.xhtml#id_2">Titelseite</a></li>
+            <li><a href="book-2.xhtml#id_3">Das Buch</a></li>
+          </ol></nav>
+          <nav epub:type="page-list"><ol><li><a href="book-1.xhtml#id_1">1</a></li></ol></nav>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
+          <section id="id_1"><h3 epub:type="title" class="title">Das Buch</h3></section>
+          <section id="id_2" aria-label="Titelseite"><p>Text</p></section>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
+          <section id="id_3"><h3>Das Buch</h3></section>
+        </body></html>
+      </wrapper>
+    </x:context>
+    <x:expect label="does not list the section with the book title"
+              test="string-join(//h:nav[@epub:type='toc']//h:a/@href, ',') = 'book-1.xhtml#id_2,book-2.xhtml#id_3'"/>
+    <x:expect label="other lists are left alone"
+              test="exists(//h:nav[@epub:type='page-list']//h:a)"/>
+  </x:scenario>
+
+  <x:scenario label="a content document">
+    <x:context>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
+          <section id="id_1"><h3 epub:type="title" class="title">Das Buch</h3></section>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
+          <section id="id_1"><h3 epub:type="title" class="title">Das Buch</h3></section>
+        </body></html>
+      </wrapper>
+    </x:context>
+    <x:expect label="is left alone"
+              test="exists(/h:html/h:body/h:section/h:h3[@class='title'])"/>
+  </x:scenario>
+
+</x:description>

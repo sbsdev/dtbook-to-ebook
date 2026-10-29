@@ -115,15 +115,16 @@ in [[file:Deviations.org][Deviations.org]].
 - [X] Untitled sections: ~aria-label~ instead of invented headings
   (~addEmptyHeaders.xsl~ adds placeholders for the TOC, ~sections.sbs.xsl~)
 - [X] Page breaks: ~aria-label~ without spaces and dot, ~class~
-  (~addPageClass.xsl~, ~pagebreaks.sbs.xsl~)
+  (~addClasses.xsl~, ~pagebreaks.sbs.xsl~)
 - [ ] Unnumbered pages before the first page number: needs page numbers in
   the DTBook, to be decided with production
 - [ ] File splitting: one file per top-level section, waiting for
   [[https://github.com/daisy/pipeline/issues/913][daisy/pipeline#913]]
 - [X] File naming (~[UID]-[XXX]-[role].xhtml~, ~nav.xhtml~;
   ~file-names.sbs.xsl~ with ~px:epub-rename-files~)
-- [ ] Book title: ~<h1 class="title" epub:type="title">~, not listed in the
+- [X] Book title: ~<h1 class="title" epub:type="title">~, not listed in the
   TOC; the rank waits for [[https://github.com/daisy/pipeline/issues/912][daisy/pipeline#912]]
+  (~addClasses.xsl~, ~toc.sbs.xsl~)
 - [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
 
 ** TODO Phase 5 — Regression run
