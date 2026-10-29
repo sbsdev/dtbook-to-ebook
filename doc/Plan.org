@@ -118,7 +118,10 @@ in [[file:Deviations.org][Deviations.org]].
   (~addPageClass.xsl~, ~pagebreaks.sbs.xsl~)
 - [ ] Unnumbered pages before the first page number: needs page numbers in
   the DTBook, to be decided with production
-- [ ] File splitting and naming (~[UID]-[XXX]-[role].xhtml~)
+- [ ] File splitting: one file per top-level section, waiting for
+  [[https://github.com/daisy/pipeline/issues/913][daisy/pipeline#913]]
+- [X] File naming (~[UID]-[XXX]-[role].xhtml~, ~nav.xhtml~;
+  ~file-names.sbs.xsl~ with ~px:epub-rename-files~)
 - [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
 
 ** TODO Phase 5 — Regression run

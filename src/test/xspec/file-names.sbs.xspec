@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the file names (Nordic Guidelines 2025-1, "File Naming Convention") -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:d="http://www.daisy.org/ns/pipeline/data"
+               xmlns:opf="http://www.idpf.org/2007/opf"
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:epub="http://www.idpf.org/2007/ops"
+               stylesheet="../../main/resources/xml/xslt/file-names.sbs.xsl">
+
+  <x:scenario label="an EPUB">
+    <x:context>
+      <wrapper>
+        <opf:package unique-identifier="pub-id" xml:base="file:/epub/EPUB/package.opf">
+          <opf:metadata><dc:identifier id="pub-id">uid-1</dc:identifier></opf:metadata>
+          <opf:manifest>
+            <opf:item id="i1" href="book-1.xhtml"/>
+            <opf:item id="i2" href="book-2.xhtml"/>
+            <opf:item id="i3" href="book-3.xhtml"/>
+            <opf:item id="i4" href="book-4.xhtml"/>
+            <opf:item id="nav" href="toc.xhtml" properties="nav"/>
+          </opf:manifest>
+          <opf:spine>
+            <opf:itemref idref="i1"/>
+            <opf:itemref idref="i2"/>
+            <opf:itemref idref="i3"/>
+            <opf:itemref idref="i4"/>
+          </opf:spine>
+        </opf:package>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/EPUB/book-1.xhtml"><body>
+          <section epub:type="frontmatter titlepage"/><section epub:type="frontmatter"/>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/EPUB/book-2.xhtml"><body>
+          <section role="doc-chapter" epub:type="bodymatter chapter"/>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/EPUB/book-3.xhtml"><body>
+          <section epub:type="backmatter"/>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/EPUB/book-4.xhtml"><body>
+          <p>no section</p>
+        </body></html>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/EPUB/toc.xhtml"><body><nav/></body></html>
+      </wrapper>
+    </x:context>
+    <x:expect label="the content documents are named after the identifier, their position and the most specific semantics of their first top-level section"
+              test="string-join(/d:fileset/d:file/replace(@href, '^.*/', ''), ',')
+                    = 'uid-1-001-titlepage.xhtml,uid-1-002-chapter.xhtml,uid-1-003-backmatter.xhtml,uid-1-004-section.xhtml,nav.xhtml'"/>
+    <x:expect label="the mapping has the old names as absolute URIs"
+              test="/d:fileset/d:file[1]/@original-href = 'file:/epub/EPUB/book-1.xhtml'
+                    and /d:fileset/d:file[1]/@href = 'file:/epub/EPUB/uid-1-001-titlepage.xhtml'"/>
+  </x:scenario>
+
+</x:description>

@@ -52,6 +52,8 @@
         <x:context label="the EPUB">
             <x:document type="zip" base-uri="temp-dir" href="output/minimal.epub"/>
         </x:context>
+        <x:expect label="the files are named as required by the Nordic Guidelines"
+                  type="xpath" test="every $f in ('EPUB/sbs-test-uid-12345-001-frontmatter.xhtml', 'EPUB/sbs-test-uid-12345-002-chapter.xhtml', 'EPUB/nav.xhtml') satisfies /c:zipfile/c:file/@name = $f"/>
         <x:expect label="the EPUB does not contain the MODS record of the intermediate ZedAI"
                   type="xpath" test="exists(/c:zipfile/c:file) and empty(/c:zipfile/c:file[ends-with(@name, 'zedai-mods.xml')])"/>
 
@@ -84,13 +86,13 @@
                   type="xpath" test="exists(/html:html/html:body[empty(@epub:type)]/html:section[@role='doc-chapter'][@epub:type='bodymatter chapter'][@aria-labelledby = html:*[matches(local-name(), '^h[1-6]$')]/@id])"/>
 
         <x:context label="the first content document">
-            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/minimal-1.xhtml"/>
+            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/sbs-test-uid-12345-001-frontmatter.xhtml"/>
         </x:context>
         <x:expect label="the untitled title page is labelled instead of getting a heading"
                   type="xpath" test="exists(//html:section[@aria-label='Titelseite'][empty(html:h1|html:h2|html:h3)])"/>
 
         <x:context label="the navigation document">
-            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/toc.xhtml"/>
+            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/nav.xhtml"/>
         </x:context>
         <x:expect label="the table of contents lists the title page with its label"
                   type="xpath" test="exists(//html:nav[@epub:type='toc']//html:a[. = 'Titelseite'])"/>

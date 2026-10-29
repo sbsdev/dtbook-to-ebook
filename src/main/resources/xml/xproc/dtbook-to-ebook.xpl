@@ -275,16 +275,44 @@
         </p:input>
     </p:delete>
 
+    <!-- file names as required by the Nordic Guidelines 2025-1 -->
+    <p:for-each>
+        <p:iteration-source>
+            <p:pipe step="postprocess" port="result"/>
+        </p:iteration-source>
+        <p:add-xml-base/>
+    </p:for-each>
+    <p:wrap-sequence wrapper="wrapper"/>
+    <p:xslt name="file-names">
+        <p:input port="parameters"><p:empty/></p:input>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/file-names.sbs.xsl"/>
+        </p:input>
+    </p:xslt>
+    <p:sink/>
+
+    <px:epub-rename-files name="rename">
+        <p:input port="source.fileset">
+            <p:pipe step="drop-mods" port="result"/>
+        </p:input>
+        <p:input port="source.in-memory">
+            <p:pipe step="postprocess" port="result"/>
+        </p:input>
+        <p:input port="mapping">
+            <p:pipe step="file-names" port="result"/>
+        </p:input>
+    </px:epub-rename-files>
+
     <!-- ======================== -->
     <!-- Store EPUB to output-dir -->
     <!-- ======================== -->
 
     <px:epub3-store name="store">
         <p:input port="fileset.in">
-            <p:pipe step="drop-mods" port="result"/>
+            <p:pipe step="rename" port="result.fileset"/>
         </p:input>
         <p:input port="in-memory.in">
-            <p:pipe step="postprocess" port="result"/>
+            <p:pipe step="rename" port="result.in-memory"/>
         </p:input>
         <p:with-option name="href" select="concat($output-dir,$output-name,'.epub')"/>
     </px:epub3-store>
