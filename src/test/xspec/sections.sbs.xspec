@@ -67,6 +67,19 @@
               test="empty(//h:h2/@id)"/>
   </x:scenario>
 
+  <x:scenario label="a section with a placeholder heading from addEmptyHeaders.xsl">
+    <x:context>
+      <html><body epub:type="frontmatter">
+        <section class="titlepage" id="s"><h1 id="p" class="aria-label">Titelseite</h1><p>Text</p></section>
+      </body></html>
+    </x:context>
+    <x:expect label="the section is labelled with the text of the placeholder"
+              test="/h:html/h:body/h:section/@aria-label = 'Titelseite'
+                    and empty(/h:html/h:body/h:section/@aria-labelledby)"/>
+    <x:expect label="the placeholder is removed"
+              test="empty(//h:h1) and exists(//h:section/h:p)"/>
+  </x:scenario>
+
   <x:scenario label="a section without heading">
     <x:context>
       <html><body epub:type="bodymatter">

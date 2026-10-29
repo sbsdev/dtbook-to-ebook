@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the placeholder headings of untitled sections (Nordic Guidelines 2025-1).
+     Requires catalog resolution of http://www.daisy.org/pipeline/modules/common-utils/i18n.xsl -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addEmptyHeaders.xsl">
+
+  <x:scenario label="an untitled chapter">
+    <x:context>
+      <dtb:dtbook xml:lang="de"><dtb:book><dtb:bodymatter>
+        <dtb:level1>
+          <dtb:pagenum>7</dtb:pagenum>
+          <dtb:p>Es war  einmal <dtb:em>ein</dtb:em> König.</dtb:p>
+          <dtb:level2><dtb:p>Ohne Titel</dtb:p></dtb:level2>
+        </dtb:level1>
+      </dtb:bodymatter></dtb:book></dtb:dtbook>
+    </x:context>
+    <x:expect label="gets a placeholder heading with the first three words, without page numbers"
+              test="//dtb:level1/*[1][self::dtb:h1][@class='aria-label'] = 'Es war einmal …'"/>
+    <x:expect label="untitled subsections get no heading"
+              test="empty(//dtb:level2/dtb:h2)"/>
+  </x:scenario>
+
+  <x:scenario label="an untitled title page">
+    <x:context>
+      <dtb:dtbook xml:lang="it"><dtb:book><dtb:frontmatter>
+        <dtb:level1 class="titlepage">
+          <dtb:p>Autore</dtb:p>
+          <dtb:level2><dtb:p>Editore</dtb:p></dtb:level2>
+        </dtb:level1>
+      </dtb:frontmatter></dtb:book></dtb:dtbook>
+    </x:context>
+    <x:expect label="is labelled as title page in the language of the book"
+              test="//dtb:level1/dtb:h1[@class='aria-label'] = 'Frontespizio'"/>
+    <x:expect label="its subsections become divs"
+              test="exists(//dtb:level1/dtb:div) and empty(//dtb:level2)"/>
+  </x:scenario>
+
+  <x:scenario label="a section without text">
+    <x:context>
+      <dtb:dtbook xml:lang="de"><dtb:book><dtb:rearmatter>
+        <dtb:level1><dtb:pagenum>99</dtb:pagenum></dtb:level1>
+      </dtb:rearmatter></dtb:book></dtb:dtbook>
+    </x:context>
+    <x:expect label="gets a generic label"
+              test="//dtb:level1/dtb:h1[@class='aria-label'] = 'Ohne Überschrift'"/>
+  </x:scenario>
+
+  <x:scenario label="a section with a heading">
+    <x:context>
+      <dtb:dtbook xml:lang="de"><dtb:book><dtb:bodymatter>
+        <dtb:level1><dtb:h1>Kapitel</dtb:h1><dtb:p>Text</dtb:p></dtb:level1>
+      </dtb:bodymatter></dtb:book></dtb:dtbook>
+    </x:context>
+    <x:expect label="is left alone"
+              test="count(//dtb:h1) = 1 and empty(//dtb:h1/@class)"/>
+  </x:scenario>
+
+</x:description>

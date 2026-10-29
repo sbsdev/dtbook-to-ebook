@@ -6,7 +6,8 @@
     - epub:type moves from body to the top-level sections, combined with a
       division taken from the section's class, or chapter in the bodymatter
     - role is the DPUB-ARIA role of that division, if there is one
-    - aria-labelledby points to the section's heading
+    - aria-labelledby points to the section's heading; a placeholder heading
+      from addEmptyHeaders.xsl becomes an aria-label instead
 -->
 <xsl:stylesheet version="2.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -64,14 +65,21 @@
       </xsl:if>
       <xsl:attribute name="epub:type"
                      select="distinct-values(($partition, $division, f:tokens(@epub:type)[not(. = $partitions)]))"/>
-      <xsl:if test="$heading">
-        <xsl:attribute name="aria-labelledby" select="($heading/@id, generate-id($heading))[1]"/>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="f:tokens($heading/@class) = 'aria-label'">
+          <xsl:attribute name="aria-label" select="normalize-space($heading)"/>
+        </xsl:when>
+        <xsl:when test="$heading">
+          <xsl:attribute name="aria-labelledby" select="($heading/@id, generate-id($heading))[1]"/>
+        </xsl:when>
+      </xsl:choose>
       <xsl:apply-templates select="node()">
         <xsl:with-param name="heading" select="$heading" tunnel="yes"/>
       </xsl:apply-templates>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="*[matches(local-name(), '^h[1-6]$')][f:tokens(@class) = 'aria-label']" priority="1"/>
 
   <xsl:template match="*[matches(local-name(), '^h[1-6]$')][not(@id)]">
     <xsl:param name="heading" tunnel="yes" as="element()?"/>

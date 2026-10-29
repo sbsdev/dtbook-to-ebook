@@ -112,7 +112,8 @@ in [[file:Deviations.org][Deviations.org]].
 - [ ] Heading ranks: upstream emits ~h3~ for top-level headings
 - [X] Top-level sections: ~role~, ~epub:type~, ~aria-labelledby~
   (~sections.sbs.xsl~)
-- [ ] Untitled sections: ~aria-label~ instead of ~addEmptyHeaders~
+- [X] Untitled sections: ~aria-label~ instead of invented headings
+  (~addEmptyHeaders.xsl~ adds placeholders for the TOC, ~sections.sbs.xsl~)
 - [ ] Page breaks: ~aria-label~ without spaces and dot, ~class~
 - [ ] File splitting and naming (~[UID]-[XXX]-[role].xhtml~)
 - [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary

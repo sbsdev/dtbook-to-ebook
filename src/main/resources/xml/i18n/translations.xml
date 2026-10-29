@@ -1,32 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <i18n xmlns="http://www.daisy.org/ns/pipeline/data">
-    <translation string="Bibliographische Angaben">
-        <text xml:lang="de">Bibliographische Angaben</text>
-        <text xml:lang="de-CH">Bibliographische Angaben</text>
-        <text xml:lang="de-DE">Bibliographische Angaben</text>
-        <text xml:lang="it">Informazioni bibliografiche</text>
-        <text xml:lang="rm-sursilv">Indicaziuns bibliograficas</text>
-    </translation>
-    <translation string="header">
-        <text xml:lang="de">Vorspann</text>
-        <text xml:lang="de-CH">Vorspann</text>
-        <text xml:lang="de-DE">Vorspann</text>
-        <text xml:lang="it">Titoli di testa</text>
-        <text xml:lang="rm-sursilv">Informaziuns preliminaras</text>
-    </translation>
-    <translation string="trailer">
-        <text xml:lang="de">Nachspann</text>
-        <text xml:lang="de-CH">Nachspann</text>
-        <text xml:lang="de-DE">Nachspann</text>
-        <text xml:lang="it">Titoli di coda</text>
-        <text xml:lang="rm-sursilv">Appendix</text>
-    </translation>
-    <translation string="original-without-numbering">
-        <text xml:lang="de">Im Original ohne Nummerierung</text>
-        <text xml:lang="de-CH">Im Original ohne Nummerierung</text>
-        <text xml:lang="de-DE">Im Original ohne Nummerierung</text>
-        <text xml:lang="it">Nell'originale senza numerazione</text>
-        <text xml:lang="rm-sursilv">Egl original senza numeraziun</text>
+    <!-- Nordic Guidelines 2025-1, 5.1.2 -->
+    <translation string="titlepage">
+        <text xml:lang="de">Titelseite</text>
+        <text xml:lang="de-CH">Titelseite</text>
+        <text xml:lang="de-DE">Titelseite</text>
+        <text xml:lang="en">Title page</text>
+        <text xml:lang="it">Frontespizio</text>
+        <text xml:lang="rm-sursilv">Pagina da titel</text>
     </translation>
     <translation string="without-heading">
         <text xml:lang="de">Ohne Überschrift</text>

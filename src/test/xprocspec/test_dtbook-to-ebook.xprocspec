@@ -23,6 +23,9 @@
                             <frontmatter>
                                 <doctitle>Minimal DTBook</doctitle>
                                 <docauthor>SBS Test</docauthor>
+                                <level1 class="titlepage">
+                                    <p>Ein Titelblatt</p>
+                                </level1>
                             </frontmatter>
                             <bodymatter>
                                 <level1>
@@ -76,6 +79,18 @@
                   type="xpath" test="exists(//html:section[@role='doc-endnotes']/html:ol/html:li[@id = substring-after(//html:a[@role='doc-noteref']/@href, '#')]/html:p/html:a[@role='doc-backlink'][@href = concat('#', //html:a[@role='doc-noteref']/@id)])"/>
         <x:expect label="the chapter section has its semantics and is labelled by its heading"
                   type="xpath" test="exists(/html:html/html:body[empty(@epub:type)]/html:section[@role='doc-chapter'][@epub:type='bodymatter chapter'][@aria-labelledby = html:*[matches(local-name(), '^h[1-6]$')]/@id])"/>
+
+        <x:context label="the first content document">
+            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/minimal-1.xhtml"/>
+        </x:context>
+        <x:expect label="the untitled title page is labelled instead of getting a heading"
+                  type="xpath" test="exists(//html:section[@aria-label='Titelseite'][empty(html:h1|html:h2|html:h3)])"/>
+
+        <x:context label="the navigation document">
+            <x:document type="file" base-uri="temp-dir" href="output/minimal.epub!/EPUB/toc.xhtml"/>
+        </x:context>
+        <x:expect label="the table of contents lists the title page with its label"
+                  type="xpath" test="exists(//html:nav[@epub:type='toc']//html:a[. = 'Titelseite'])"/>
 
     </x:scenario>
 
