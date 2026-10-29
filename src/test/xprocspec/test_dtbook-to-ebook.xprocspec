@@ -30,6 +30,7 @@
                             <bodymatter>
                                 <level1>
                                     <h1>Kapitel 1</h1>
+                                    <pagenum id="p7" page="normal">7</pagenum>
                                     <p>Hallo Welt.<noteref idref="#n1">1</noteref></p>
                                     <note id="n1"><p>Eine Anmerkung.</p></note>
                                 </level1>
@@ -77,6 +78,8 @@
                   type="xpath" test="exists(/html:html/html:head/html:link[@rel='stylesheet'][ends-with(@href, 'css/accessibility.css')])"/>
         <x:expect label="the note is in an endnotes section with a backlink to its reference"
                   type="xpath" test="exists(//html:section[@role='doc-endnotes']/html:ol/html:li[@id = substring-after(//html:a[@role='doc-noteref']/@href, '#')]/html:p/html:a[@role='doc-backlink'][@href = concat('#', //html:a[@role='doc-noteref']/@id)])"/>
+        <x:expect label="the page break between blocks has the page number as label and the page class"
+                  type="xpath" test="exists(//html:section/html:div[@role='doc-pagebreak'][@aria-label='7'][@class='page-normal'])"/>
         <x:expect label="the chapter section has its semantics and is labelled by its heading"
                   type="xpath" test="exists(/html:html/html:body[empty(@epub:type)]/html:section[@role='doc-chapter'][@epub:type='bodymatter chapter'][@aria-labelledby = html:*[matches(local-name(), '^h[1-6]$')]/@id])"/>
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the page breaks (Nordic Guidelines 2025-1, "Pagination") -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:epub="http://www.idpf.org/2007/ops"
+               xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="http://www.w3.org/1999/xhtml"
+               stylesheet="../../main/resources/xml/xslt/pagebreaks.sbs.xsl">
+
+  <x:scenario label="page breaks in a content document">
+    <x:context>
+      <html><body>
+        <section>
+          <span aria-label=" 5. " role="doc-pagebreak" epub:type="pagebreak" id="page-5" class="page-normal"/>
+          <p>Text<span aria-label=" 6. " role="doc-pagebreak" epub:type="pagebreak" id="page-6" class="page-normal"/> weiter</p>
+          <ul><li>Punkt<span aria-label=" vii. " role="doc-pagebreak" epub:type="pagebreak" id="page-vii" class="page-front"/></li></ul>
+        </section>
+      </body></html>
+    </x:context>
+    <x:expect label="the label is the page number"
+              test="string-join(//*[@role='doc-pagebreak']/@aria-label, ',') = '5,6,vii'"/>
+    <x:expect label="a page break between blocks is a div"
+              test="exists(/h:html/h:body/h:section/h:div[@id='page-5'][@epub:type='pagebreak'][@class='page-normal'])"/>
+    <x:expect label="page breaks in text and lists stay inline"
+              test="exists(//h:p/h:span[@id='page-6']) and exists(//h:li/h:span[@id='page-vii'])"/>
+  </x:scenario>
+
+  <x:scenario label="the page list">
+    <x:context>
+      <html><body>
+        <nav epub:type="toc"><ol><li><a href="c.xhtml#s">Kapitel 5.</a></li></ol></nav>
+        <nav role="doc-pagelist" epub:type="page-list"><ol>
+          <li><a href="c.xhtml#page-5">5.</a></li>
+          <li><a href="c.xhtml#page-vii">vii.</a></li>
+        </ol></nav>
+      </body></html>
+    </x:context>
+    <x:expect label="lists the page numbers"
+              test="string-join(//h:nav[@epub:type='page-list']//h:a, ',') = '5,vii'"/>
+    <x:expect label="the table of contents is left alone"
+              test="//h:nav[@epub:type='toc']//h:a = 'Kapitel 5.'"/>
+  </x:scenario>
+
+</x:description>

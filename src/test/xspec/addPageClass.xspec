@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the class of page numbers (Nordic Guidelines 2025-1, "Pagination") -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+               stylesheet="../../main/resources/xml/xslt/addPageClass.xsl">
+
+  <x:scenario label="page numbers">
+    <x:context>
+      <dtb:level1>
+        <dtb:pagenum id="p1" page="front">i</dtb:pagenum>
+        <dtb:pagenum id="p2" page="normal">1</dtb:pagenum>
+        <dtb:pagenum id="p3" page="special">A</dtb:pagenum>
+        <dtb:pagenum id="p4">2</dtb:pagenum>
+        <dtb:pagenum id="p5" class="x">3</dtb:pagenum>
+      </dtb:level1>
+    </x:context>
+    <x:expect label="get the class of their page type, normal by default"
+              test="string-join(//dtb:pagenum/@class, ',') = 'page-front,page-normal,page-special,page-normal,x page-normal'"/>
+    <x:expect label="keep their number and attributes"
+              test="//dtb:pagenum[@id='p1'] = 'i' and //dtb:pagenum[@id='p1']/@page = 'front'"/>
+  </x:scenario>
+
+</x:description>

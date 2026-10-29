@@ -158,6 +158,13 @@
         </p:input>
     </p:xslt>
 
+    <p:xslt name="add-page-class">
+        <p:input port="parameters"><p:empty/></p:input>
+        <p:input port="stylesheet">
+            <p:document href="../xslt/addPageClass.xsl"/>
+        </p:input>
+    </p:xslt>
+
     <p:identity name="dtbook-preprocessed"/>
 
     <!-- ======================== -->
@@ -244,6 +251,13 @@
                     <p:input port="parameters"><p:empty/></p:input>
                     <p:input port="stylesheet">
                         <p:document href="../xslt/sections.sbs.xsl"/>
+                    </p:input>
+                    <p:with-option name="output-base-uri" select="$html-uri"/>
+                </p:xslt>
+                <p:xslt>
+                    <p:input port="parameters"><p:empty/></p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/pagebreaks.sbs.xsl"/>
                     </p:input>
                     <p:with-option name="output-base-uri" select="$html-uri"/>
                 </p:xslt>

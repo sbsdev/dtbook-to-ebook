@@ -114,7 +114,10 @@ in [[file:Deviations.org][Deviations.org]].
   (~sections.sbs.xsl~)
 - [X] Untitled sections: ~aria-label~ instead of invented headings
   (~addEmptyHeaders.xsl~ adds placeholders for the TOC, ~sections.sbs.xsl~)
-- [ ] Page breaks: ~aria-label~ without spaces and dot, ~class~
+- [X] Page breaks: ~aria-label~ without spaces and dot, ~class~
+  (~addPageClass.xsl~, ~pagebreaks.sbs.xsl~)
+- [ ] Unnumbered pages before the first page number: needs page numbers in
+  the DTBook, to be decided with production
 - [ ] File splitting and naming (~[UID]-[XXX]-[role].xhtml~)
 - [ ] OPF: ~nordic:guidelines~, ~dcterms:conformsTo~, accessibility summary
 
