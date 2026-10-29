@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tests for the semantics of the top-level sections (Nordic Guidelines 2025-1) -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:epub="http://www.idpf.org/2007/ops"
+               xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="http://www.w3.org/1999/xhtml"
+               stylesheet="../../main/resources/xml/xslt/sections.sbs.xsl">
+
+  <x:scenario label="a chapter in the bodymatter">
+    <x:context>
+      <html><body epub:type="bodymatter">
+        <section id="s1">
+          <h1 id="h1">Kapitel</h1>
+          <section><h2>Szene</h2></section>
+        </section>
+      </body></html>
+    </x:context>
+    <x:expect label="the partition moves from the body to the section"
+              test="empty(/h:html/h:body/@epub:type)"/>
+    <x:expect label="the section is a chapter"
+              test="/h:html/h:body/h:section/@epub:type = 'bodymatter chapter'
+                    and /h:html/h:body/h:section/@role = 'doc-chapter'"/>
+    <x:expect label="the section is labelled by its heading"
+              test="/h:html/h:body/h:section/@aria-labelledby = 'h1'"/>
+    <x:expect label="subsections are left alone"
+              test="empty(//h:section/h:section/(@role, @epub:type, @aria-labelledby))"/>
+  </x:scenario>
+
+  <x:scenario label="a title page in the frontmatter">
+    <x:context>
+      <html><body epub:type="frontmatter">
+        <section class="titlepage"><h1 id="t">Bibliographische Angaben</h1></section>
+        <section><h1 id="k">Klappentexte</h1></section>
+      </body></html>
+    </x:context>
+    <x:expect label="the division is taken from the class"
+              test="/h:html/h:body/h:section[1]/@epub:type = 'frontmatter titlepage'"/>
+    <x:expect label="there is no role for a title page"
+              test="empty(/h:html/h:body/h:section[1]/@role)"/>
+    <x:expect label="the class is kept"
+              test="/h:html/h:body/h:section[1]/@class = 'titlepage'"/>
+    <x:expect label="other frontmatter sections only get the partition"
+              test="/h:html/h:body/h:section[2]/@epub:type = 'frontmatter' and empty(/h:html/h:body/h:section[2]/@role)"/>
+  </x:scenario>
+
+  <x:scenario label="an appendix in the backmatter, with an existing epub:type">
+    <x:context>
+      <html><body epub:type="backmatter">
+        <section epub:type="appendix"><h1 id="a">Anhang</h1></section>
+      </body></html>
+    </x:context>
+    <x:expect label="the partition is added in front"
+              test="/h:html/h:body/h:section/@epub:type = 'backmatter appendix'
+                    and /h:html/h:body/h:section/@role = 'doc-appendix'"/>
+  </x:scenario>
+
+  <x:scenario label="a heading without id">
+    <x:context>
+      <html><body epub:type="bodymatter">
+        <section><h1>Kapitel</h1><p><span><h2>no section heading</h2></span></p></section>
+      </body></html>
+    </x:context>
+    <x:expect label="gets an id that the section refers to"
+              test="exists(/h:html/h:body/h:section/h:h1/@id)
+                    and /h:html/h:body/h:section/@aria-labelledby = /h:html/h:body/h:section/h:h1/@id"/>
+    <x:expect label="other headings get no id"
+              test="empty(//h:h2/@id)"/>
+  </x:scenario>
+
+  <x:scenario label="a section without heading">
+    <x:context>
+      <html><body epub:type="bodymatter">
+        <section><p>Text</p></section>
+      </body></html>
+    </x:context>
+    <x:expect label="has no aria-labelledby"
+              test="empty(//h:section/@aria-labelledby) and //h:section/@epub:type = 'bodymatter chapter'"/>
+  </x:scenario>
+
+</x:description>

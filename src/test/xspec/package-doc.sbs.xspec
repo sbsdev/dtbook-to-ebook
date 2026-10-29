@@ -5,14 +5,13 @@
                xmlns:opf="http://www.idpf.org/2007/opf"
                xmlns:dc="http://purl.org/dc/elements/1.1/"
                xmlns:html="http://www.w3.org/1999/xhtml"
-               xmlns:c="http://www.w3.org/ns/xproc-step"
                stylesheet="../../main/resources/xml/xslt/package-doc.sbs.xsl">
 
   <x:param name="identifier" select="'sbs-uid'"/>
 
   <x:scenario label="a text-only book">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package>
           <opf:metadata>
             <dc:title>Text-only book</dc:title>
@@ -25,7 +24,7 @@
           </opf:manifest>
         </opf:package>
         <html:html><html:body><html:p>Text</html:p></html:body></html:html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the result is the package document"
               test="exists(/opf:package) and empty(//html:*)"/>
@@ -49,7 +48,7 @@
 
   <x:scenario label="leftovers of the intermediate ZedAI">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package>
           <opf:metadata>
             <dc:title>Book</dc:title>
@@ -60,7 +59,7 @@
             <opf:link rel="record" href="zedai-mods.xml" media-type="application/mods+xml"/>
           </opf:metadata>
         </opf:package>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="empty DCMES elements are removed"
               test="empty(//dc:*[not(normalize-space())])"/>
@@ -74,14 +73,14 @@
 
   <x:scenario label="the source of the page breaks">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package>
           <opf:metadata>
             <dc:source>978-3-15-014331-5</dc:source>
             <opf:meta property="a11y:pageBreakSource">978-3-15-014331-5</opf:meta>
           </opf:metadata>
         </opf:package>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the prefixed a11y:pageBreakSource is removed"
               test="empty(//opf:meta[@property='a11y:pageBreakSource'])"/>
@@ -91,13 +90,13 @@
 
   <x:scenario label="the identifier comes from the DTBook">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package unique-identifier="pub-id">
           <opf:metadata>
             <dc:identifier id="pub-id">0f6e3a4c-random-uuid</dc:identifier>
           </opf:metadata>
         </opf:package>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the unique identifier is the one passed in"
               test="//dc:identifier[@id='pub-id'] = 'sbs-uid'"/>
@@ -105,7 +104,7 @@
 
   <x:scenario label="a book with described images">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package>
           <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
           <opf:manifest>
@@ -116,7 +115,7 @@
           <html:img src="photo.jpg" alt="A photo" aria-describedby="d1"/>
           <html:aside id="d1"><html:p>Description</html:p></html:aside>
         </html:body></html:html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="accessMode visual is present"
               test="//opf:meta[@property='schema:accessMode'] = 'visual'"/>
@@ -128,7 +127,7 @@
 
   <x:scenario label="a book with images without alt text or description">
     <x:context>
-      <c:wrapper>
+      <wrapper>
         <opf:package>
           <opf:metadata><dc:title>Book with images</dc:title></opf:metadata>
           <opf:manifest>
@@ -136,7 +135,7 @@
           </opf:manifest>
         </opf:package>
         <html:html><html:body><html:img src="photo.jpg" alt=""/></html:body></html:html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="alternativeText is absent"
               test="not(//opf:meta[@property='schema:accessibilityFeature'] = 'alternativeText')"/>

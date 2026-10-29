@@ -110,7 +110,8 @@ in [[file:Deviations.org][Deviations.org]].
   (~notes.sbs.xsl~); drop ~moveFootnotesToRear~, ~addFootnoteAnchor~,
   ~addFootnoteBacklinks~
 - [ ] Heading ranks: upstream emits ~h3~ for top-level headings
-- [ ] Top-level sections: ~role~, ~epub:type~, ~aria-labelledby~
+- [X] Top-level sections: ~role~, ~epub:type~, ~aria-labelledby~
+  (~sections.sbs.xsl~)
 - [ ] Untitled sections: ~aria-label~ instead of ~addEmptyHeaders~
 - [ ] Page breaks: ~aria-label~ without spaces and dot, ~class~
 - [ ] File splitting and naming (~[UID]-[XXX]-[role].xhtml~)

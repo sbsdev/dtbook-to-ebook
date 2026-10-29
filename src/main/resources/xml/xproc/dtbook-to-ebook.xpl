@@ -4,7 +4,6 @@
     xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
     xmlns:sbs="http://www.sbs.ch/pipeline"
     xmlns:d="http://www.daisy.org/ns/pipeline/data"
-    xmlns:c="http://www.w3.org/ns/xproc-step"
     exclude-inline-prefixes="#all"
     type="sbs:dtbook-to-ebook" name="main" version="1.0">
 
@@ -206,7 +205,7 @@
             <p:when test="ends-with(base-uri(/*), '.opf')">
                 <p:variable name="opf-uri" select="base-uri(/*)"/>
                 <!-- the XSLT derives the features from the images in the content documents -->
-                <p:wrap-sequence wrapper="c:wrapper">
+                <p:wrap-sequence wrapper="wrapper">
                     <p:input port="source">
                         <p:pipe step="convert" port="result.in-memory"/>
                     </p:input>
@@ -228,7 +227,7 @@
                 <p:variable name="html-uri" select="base-uri(/*)"/>
                 <p:add-xml-base/>
                 <p:identity name="current"/>
-                <p:wrap-sequence wrapper="c:wrapper">
+                <p:wrap-sequence wrapper="wrapper">
                     <p:input port="source">
                         <p:pipe step="current" port="result"/>
                         <p:pipe step="content-docs" port="result"/>
@@ -238,6 +237,13 @@
                     <p:input port="parameters"><p:empty/></p:input>
                     <p:input port="stylesheet">
                         <p:document href="../xslt/notes.sbs.xsl"/>
+                    </p:input>
+                    <p:with-option name="output-base-uri" select="$html-uri"/>
+                </p:xslt>
+                <p:xslt>
+                    <p:input port="parameters"><p:empty/></p:input>
+                    <p:input port="stylesheet">
+                        <p:document href="../xslt/sections.sbs.xsl"/>
                     </p:input>
                     <p:with-option name="output-base-uri" select="$html-uri"/>
                 </p:xslt>

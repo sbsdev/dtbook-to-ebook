@@ -5,6 +5,7 @@
                xmlns:opf="http://www.idpf.org/2007/opf"
                xmlns:dc="http://purl.org/dc/elements/1.1/"
                xmlns:html="http://www.w3.org/1999/xhtml"
+               xmlns:epub="http://www.idpf.org/2007/ops"
                script="dtbook-to-ebook-test-wrapper.xpl">
 
     <x:scenario label="convert a minimal DTBook to EPUB3">
@@ -73,6 +74,8 @@
                   type="xpath" test="exists(/html:html/html:head/html:link[@rel='stylesheet'][ends-with(@href, 'css/accessibility.css')])"/>
         <x:expect label="the note is in an endnotes section with a backlink to its reference"
                   type="xpath" test="exists(//html:section[@role='doc-endnotes']/html:ol/html:li[@id = substring-after(//html:a[@role='doc-noteref']/@href, '#')]/html:p/html:a[@role='doc-backlink'][@href = concat('#', //html:a[@role='doc-noteref']/@id)])"/>
+        <x:expect label="the chapter section has its semantics and is labelled by its heading"
+                  type="xpath" test="exists(/html:html/html:body[empty(@epub:type)]/html:section[@role='doc-chapter'][@epub:type='bodymatter chapter'][@aria-labelledby = html:*[matches(local-name(), '^h[1-6]$')]/@id])"/>
 
     </x:scenario>
 

@@ -3,16 +3,14 @@
      The context wraps the content document, followed by all content documents.
      Requires catalog resolution of http://www.daisy.org/pipeline/modules/common-utils/i18n.xsl -->
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-               xmlns:c="http://www.w3.org/ns/xproc-step"
                xmlns:epub="http://www.idpf.org/2007/ops"
-               xmlns="http://www.w3.org/1999/xhtml"
                xmlns:h="http://www.w3.org/1999/xhtml"
                stylesheet="../../main/resources/xml/xslt/notes.sbs.xsl">
 
   <x:scenario label="sequentially numbered notes">
     <x:context>
-      <c:wrapper>
-        <html xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
           <section id="s1">
             <h1>Kapitel</h1>
             <p>Text<a href="#fn1" epub:type="noteref" role="doc-noteref">1</a></p>
@@ -24,7 +22,7 @@
             </section>
           </section>
         </body></html>
-        <html xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
           <section id="s1">
             <h1>Kapitel</h1>
             <p>Text<a href="#fn1" epub:type="noteref" role="doc-noteref">1</a></p>
@@ -36,7 +34,7 @@
             </section>
           </section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the result is the content document without xml:base"
               test="exists(/h:html) and empty(/h:html/@xml:base)"/>
@@ -60,8 +58,8 @@
 
   <x:scenario label="sequential notes that continue the numbering of a previous chapter">
     <x:context>
-      <c:wrapper>
-        <html xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
           <section>
             <h3>Nachwort</h3>
             <p>Text<a href="#fn7" epub:type="noteref">7</a><a href="#fn8" epub:type="noteref">8</a></p>
@@ -69,7 +67,7 @@
             <aside id="fn8"><p>Acht</p></aside>
           </section>
         </body></html>
-        <html xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
           <section>
             <h3>Nachwort</h3>
             <p>Text<a href="#fn7" epub:type="noteref">7</a><a href="#fn8" epub:type="noteref">8</a></p>
@@ -77,7 +75,7 @@
             <aside id="fn8"><p>Acht</p></aside>
           </section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the list starts at the first note number"
               test="//h:section[@role='doc-endnotes']/h:ol/@start = '7'"/>
@@ -87,22 +85,22 @@
 
   <x:scenario label="notes that are not numbered sequentially">
     <x:context>
-      <c:wrapper>
-        <html xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
           <section>
             <h1>Kapitel</h1>
             <p>Text<a href="#fn1" epub:type="noteref">*</a></p>
             <aside id="fn1"><p>Stern</p></aside>
           </section>
         </body></html>
-        <html xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
           <section>
             <h1>Kapitel</h1>
             <p>Text<a href="#fn1" epub:type="noteref">*</a></p>
             <aside id="fn1"><p>Stern</p></aside>
           </section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="there is no endnotes section"
               test="empty(//h:section[@role='doc-endnotes'])"/>
@@ -114,26 +112,26 @@
 
   <x:scenario label="a note referenced from another file">
     <x:context>
-      <c:wrapper>
-        <html xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
           <section>
             <h1>Anhang</h1>
             <aside id="fn1"><p>Anmerkung</p></aside>
           </section>
         </body></html>
-        <html xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-2.xhtml"><body>
           <section>
             <h1>Kapitel</h1>
             <p>Text<a href="book-3.xhtml#fn1" epub:type="noteref">1</a></p>
           </section>
         </body></html>
-        <html xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" xml:base="file:/epub/book-3.xhtml"><body>
           <section>
             <h1>Anhang</h1>
             <aside id="fn1"><p>Anmerkung</p></aside>
           </section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the backlink points to the other file"
               test="//h:li[@id='fn1']//h:a[@role='doc-backlink']/@href = 'book-2.xhtml#ref-fn1'"/>
@@ -141,14 +139,14 @@
 
   <x:scenario label="an aside that is not a note">
     <x:context>
-      <c:wrapper>
-        <html xml:base="file:/epub/book-2.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/book-2.xhtml"><body>
           <section><h1>Kapitel</h1><aside id="box"><p>Kasten</p></aside></section>
         </body></html>
-        <html xml:base="file:/epub/book-2.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:base="file:/epub/book-2.xhtml"><body>
           <section><h1>Kapitel</h1><aside id="box"><p>Kasten</p></aside></section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="is left alone"
               test="exists(//h:section/h:aside[@id='box'][empty(@role)]) and empty(//h:a)"/>
@@ -156,14 +154,14 @@
 
   <x:scenario label="Italian">
     <x:context>
-      <c:wrapper>
-        <html xml:lang="it" xml:base="file:/epub/book-2.xhtml"><body>
+      <wrapper>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" xml:base="file:/epub/book-2.xhtml"><body>
           <section><h1>Capitolo</h1><p><a href="#fn1" epub:type="noteref">1</a></p><aside id="fn1"><p>Nota</p></aside></section>
         </body></html>
-        <html xml:lang="it" xml:base="file:/epub/book-2.xhtml"><body>
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" xml:base="file:/epub/book-2.xhtml"><body>
           <section><h1>Capitolo</h1><p><a href="#fn1" epub:type="noteref">1</a></p><aside id="fn1"><p>Nota</p></aside></section>
         </body></html>
-      </c:wrapper>
+      </wrapper>
     </x:context>
     <x:expect label="the heading is Italian"
               test="//h:section[@role='doc-endnotes']/h:h2 = 'Note'"/>
