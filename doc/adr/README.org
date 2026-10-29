@@ -14,4 +14,4 @@ When you add a record or change its status, update its row in the table below to
 | [[file:0003-debian-package.org][ADR-0003]] | Ship the module as a Debian package attached to GitHub releases  | ACCEPTED   |
 | [[file:0004-default-java.org][ADR-0004]] | Run Pipeline 1.15 on the distribution's default Java             | ACCEPTED   |
 | [[file:0005-epub-stylesheet.org][ADR-0005]] | Attach accessibility.css via the upstream epub-stylesheet option | ACCEPTED   |
-| [[file:0006-nordic-guidelines.org][ADR-0006]] | Adopt the Nordic Guidelines 2025-1 as the SBS EPUB standard      | PROPOSED   |
+| [[file:0006-nordic-guidelines.org][ADR-0006]] | Standards first: follow EPUB 3 and the Nordic Guidelines 2025-1  | ACCEPTED   |

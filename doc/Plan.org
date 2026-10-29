@@ -106,7 +106,11 @@ server that have an EPUB product. 100 documents gives good coverage.
 - [X] Write ~scripts/compare-epub.bb~ (tested on one document)
 - [ ] Deploy this module to the test instance (xmlp04), see below
 - [ ] Run compare-epub.bb with ~:limit 1~, then against 100 production books
-- [ ] Fix discrepancies until 100/100 pass
+- [ ] Fix discrepancies until 100/100 pass. Per [[file:adr/0006-nordic-guidelines.org][ADR-0006]], "pass" means
+  valid with EPUBCheck, conforming to the Nordic Guidelines 2025-1 and
+  the same text content as prod; markup differences from prod are not
+  failures in themselves
+- [ ] Show the result to marketing
 
 *** Test deployment
 

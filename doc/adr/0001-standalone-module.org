@@ -25,6 +25,9 @@ The goal is to drop the old fork and produce EPUBs using the newest
 off-the-shelf DAISY Pipeline, while keeping all existing SBS-specific
 behaviour so that the generated EPUBs remain identical.
 
+Revised by [[file:0006-nordic-guidelines.org][ADR-0006]]: identical output is no longer the goal; the
+EPUBs follow EPUB 3 and the Nordic Guidelines 2025-1 first.
+
 ** Decision Drivers
 
 - Maintenance burden :: The Nordic migrator fork is unmaintained;

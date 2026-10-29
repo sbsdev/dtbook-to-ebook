@@ -2,9 +2,9 @@
 #+TODO: DRAFT PROPOSED | ACCEPTED REJECTED DEPRECATED SUPERSEDED
 #+language: en
 
-* PROPOSED ADR-0006: Adopt the Nordic Guidelines 2025-1 as the SBS EPUB standard
-- Deciders :: CE, to be discussed within SBS
-- Date :: [2026-10-28 Mi]
+* ACCEPTED ADR-0006: Standards first: follow EPUB 3 and the Nordic Guidelines 2025-1
+- Deciders :: CE, after internal discussion within SBS
+- Date :: [2026-10-28 Mi], accepted [2026-10-29 Do]
 
 ** Context and Problem Statement
 
@@ -75,12 +75,21 @@ Nota, SPSM and Statped).
 
 ** Decision Outcome
 
-Proposed option: *C*, adopt the Nordic Guidelines 2025-1.
+Chosen option: *C*, aim for standards-compliant EPUBs. The internal
+discussion agreed on this order of precedence:
 
-The SBS requirements in [[file:../Requirements.org][Requirements.org]] remain, but each one is
-checked against the guidelines: where the guidelines cover it, we
-follow the guidelines; where SBS really needs something different, it
-is kept as a documented deviation.
+1. Comply with the EPUB standard (EPUB 3.3, EPUB Accessibility 1.1,
+   validated with EPUBCheck) and the Nordic Guidelines 2025-1.
+2. Use upstream DAISY Pipeline functionality wherever it gets us there,
+   rather than SBS code.
+3. Only then apply the SBS requirements in [[file:../Requirements.org][Requirements.org]], and only
+   where they do not conflict with 1. Where SBS really needs something
+   different, it is kept as a documented deviation.
+
+Reproducing the look of the old EPUBs is explicitly not a goal. The
+result of this approach is shown to marketing, who decide whether
+anything has to change. Their requests are then handled as SBS
+requirements under point 3.
 
 *** What changes, by example
 
@@ -158,23 +167,23 @@ the first child of the ~<figure>~, and the agency may add a legal page
 - Bad :: Requires an internal decision and downstream checks before
   rollout.
 
-** Open Questions for the Internal Discussion
+** Resolution of the Open Questions
 
-1. Do we follow the guidelines on note placement (end of each content
-   file), or keep a single notes section at the end of the book as a
-   documented SBS deviation?
-2. Fixed texts: the Nordic German wordings ("Anmerkungen" as the notes
-   heading, "Gehe zur Referenz #." as backlink), or SBS wordings
-   ("Fussnoten", a backlink that includes the note number such as
-   "Zurück zur Referenz #.")?
-3. Which downstream systems depend on the current markup or file
-   names (online player, distribution, apps)?
-4. Is there a validator for Nordic 2025-1 we can run in the
-   regression test, or do we encode the relevant rules in
-   ~compare-epub.bb~?
-5. Which SBS requirements become documented deviations? Candidates:
-   boilerplate texts, ~accessibility.css~, the extended image
-   description boilerplate.
+The proposal listed five questions for the internal discussion. With
+the order of precedence above they resolve as follows:
+
+1. Note placement :: Follow the guidelines (and upstream, as far as it
+   gets there). Marketing decides on the result.
+2. Fixed texts :: Use the Nordic German wordings for now ("Anmerkungen",
+   "Gehe zur Referenz #."). Marketing decides on the result.
+3. Downstream systems :: Still to be checked before the rollout: online
+   player, distribution, apps.
+4. Validation :: The regression run validates every test EPUB with
+   EPUBCheck. A Nordic 2025-1 validator is still to be found; until
+   then the relevant rules are checked in ~compare-epub.bb~.
+5. Documented deviations :: Decided one by one under point 3 of the
+   order of precedence. Candidates: boilerplate texts,
+   ~accessibility.css~, the extended image description boilerplate.
 
 ** Links
 
