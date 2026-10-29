@@ -38,12 +38,12 @@ Observed on document 13879 ("Das Herz eines Boxers").
 
 * Files
 
-| Area                | Prod                                     | New                                                           | Reason   | Status     |
-|---------------------+------------------------------------------+---------------------------------------------------------------+----------+------------|
-| Splitting           | one file per top-level section (8 files) | one file per frontmatter, bodymatter, backmatter (3 files)    | Upstream | regression |
-| File names          | ~[UID]-8-footnotes.xhtml~                | ~[UID]-3.xhtml~; the guidelines want ~[UID]-003-[role].xhtml~ | Upstream | open       |
-| Navigation document | ~nav.xhtml~ plus an EPUB 2 ~nav.ncx~     | ~toc.xhtml~, no NCX (optional in EPUB 3)                      | Upstream | done       |
-| MODS record         | none                                     | none (upstream adds ~zedai-mods.xml~, we remove it)           | —        | done       |
+| Area                | Prod                                     | New                                                                             | Reason   | Status     |
+|---------------------+------------------------------------------+---------------------------------------------------------------------------------+----------+------------|
+| Splitting           | one file per top-level section (8 files) | one file per frontmatter, bodymatter, backmatter (3 files) ([[https://github.com/daisy/pipeline/issues/913][daisy/pipeline#913]]) | Upstream | regression |
+| File names          | ~[UID]-8-footnotes.xhtml~                | ~[UID]-3.xhtml~; the guidelines want ~[UID]-003-[role].xhtml~                   | Upstream | open       |
+| Navigation document | ~nav.xhtml~ plus an EPUB 2 ~nav.ncx~     | ~toc.xhtml~, no NCX (optional in EPUB 3)                                        | Upstream | done       |
+| MODS record         | none                                     | none (upstream adds ~zedai-mods.xml~, we remove it)                             | —        | done       |
 
 * Package document
 
