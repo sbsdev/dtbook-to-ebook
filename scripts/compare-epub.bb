@@ -306,7 +306,14 @@
     (spit test-file test-text)
     (spit diff-file (:out (p/sh "diff" "--unified" (str prod-file) (str test-file))))))
 
+(defn save-epubs [output-dir doc-id prod-bytes test-bytes]
+  (doseq [[dir bytes] [["prod" prod-bytes] ["test" test-bytes]]
+          :let [f (io/file output-dir "epub" dir (str doc-id ".epub"))]]
+    (io/make-parents f)
+    (io/copy bytes f)))
+
 (defn compare-epubs [output-dir doc-id prod-bytes test-bytes normalise-ids]
+  (save-epubs output-dir doc-id prod-bytes test-bytes)
   (let [prod      (read-epub (unzip prod-bytes))
         test      (read-epub (unzip test-bytes))
         prod-text (normalise-ids (normalised-epub prod))
