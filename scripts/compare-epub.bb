@@ -312,7 +312,19 @@
     (io/make-parents f)
     (io/copy bytes f)))
 
-(defn compare-epubs [output-dir doc-id prod-bytes test-bytes normalise-ids]
+(defn epubcheck
+  "Validates the saved test EPUB, writes the report and returns the summary line
+  if it is not valid."
+  [jar output-dir doc-id]
+  (let [{:keys [exit out err]} (p/sh "java" "-jar" (str (fs/expand-home jar))
+                                     (str (io/file output-dir "epub" "test" (str doc-id ".epub"))))
+        report (io/file output-dir "epubcheck" (str doc-id ".txt"))]
+    (io/make-parents report)
+    (spit report (str out err))
+    (when-not (zero? exit)
+      (or (re-find #"Messages: .*" (str out err)) (str "exit code " exit)))))
+
+(defn compare-epubs [output-dir doc-id prod-bytes test-bytes normalise-ids epubcheck-jar]
   (save-epubs output-dir doc-id prod-bytes test-bytes)
   (let [prod      (read-epub (unzip prod-bytes))
         test      (read-epub (unzip test-bytes))
@@ -324,12 +336,13 @@
       (save-diff output-dir doc-id prod-text test-text))
     {:doc-id     doc-id
      :identical? (= prod-text test-text)
+     :invalid    (when epubcheck-jar (epubcheck epubcheck-jar output-dir doc-id))
      :mismatches (vec (for [k (keys prod-dims)
                             :when (not= (normalise-ids (pr-str (prod-dims k)))
                                         (normalise-ids (pr-str (test-dims k))))]
                         k))}))
 
-(defn process-doc [prod-url test-url token output-dir doc]
+(defn process-doc [prod-url test-url token output-dir epubcheck-jar doc]
   (let [doc-id (:id doc)]
     (try
       (let [version (get-latest-version prod-url doc-id)]
@@ -350,7 +363,7 @@
                     test-epub (generate-epub test-url token test-doc-id)
                     normalise #(-> % (str/replace (:identifier doc) "IDENTIFIER")
                                    (str/replace test-identifier "IDENTIFIER"))]
-                (compare-epubs output-dir doc-id prod-epub test-epub normalise))
+                (compare-epubs output-dir doc-id prod-epub test-epub normalise epubcheck-jar))
               (finally
                 (delete-document test-url token test-doc-id))))))
       (catch clojure.lang.ExceptionInfo e
@@ -367,17 +380,24 @@
   (let [errors    (filter :error results)
         compared  (remove :error results)
         passing   (filter #(empty? (:mismatches %)) compared)
-        failing   (remove #(empty? (:mismatches %)) compared)]
+        failing   (remove #(empty? (:mismatches %)) compared)
+        invalid   (filter :invalid compared)]
     (println "\n=== EPUB Comparison Results ===")
     (println (format "Documents processed      : %d" (count results)))
     (println (format "  All dimensions match   : %d" (count passing)))
     (println (format "    of which identical   : %d" (count (filter :identical? passing))))
     (println (format "  Dimension mismatches   : %d" (count failing)))
+    (println (format "  Invalid test EPUBs     : %d" (count invalid)))
     (println (format "  Errors                 : %d" (count errors)))
     (when (seq failing)
       (println "\nDimension mismatches:")
       (doseq [{:keys [doc-id mismatches]} (sort-by :doc-id failing)]
         (println (format "  doc-id=%-8d %s" doc-id (str/join ", " (map name mismatches))))))
+    (when (seq invalid)
+      (println "\nInvalid test EPUBs (EPUBCheck):")
+      (doseq [{:keys [doc-id invalid]} (sort-by :doc-id invalid)]
+        (println (format "  doc-id=%-8d %s" doc-id invalid)))
+      (println (str "Reports written to " output-dir "/epubcheck/")))
     (when (some (complement :identical?) compared)
       (println (str "\nContent diffs written to " output-dir "/diff/")))
     (when (seq errors)
@@ -402,7 +422,8 @@
              "   :token        \"Token <your-jwt-token>\""
              "   :output-dir   \"/tmp/epub-cmp\"   ; optional, this is the default"
              "   :limit        100                ; optional, this is the default"
-             "   :document-ids [13165 13167]}     ; optional, overrides :limit"
+             "   :document-ids [13165 13167]      ; optional, overrides :limit"
+             "   :epubcheck    \"~/opt/epubcheck-5.4.0/epubcheck.jar\"} ; optional, validates the test EPUBs"
              ""
              "Obtain a token via POST /api/login. The config file is gitignored."]))
 
@@ -420,7 +441,7 @@
     (edn/read-string (slurp f))))
 
 (when (= *file* (System/getProperty "babashka.file"))
-  (let [{:keys [prod-url test-url token output-dir limit document-ids]
+  (let [{:keys [prod-url test-url token output-dir limit document-ids epubcheck]
          :or   {output-dir "/tmp/epub-cmp" limit 100}}
         (load-config (or (first *command-line-args*) default-config-file))]
     (when-not (and prod-url test-url token)
@@ -436,7 +457,7 @@
                          (partition-all 5)
                          (mapcat (fn [batch]
                                    (pmap #(do (println (str "  doc " (:id %) " – " (:title %)))
-                                              (process-doc prod-url test-url token output-dir %))
+                                              (process-doc prod-url test-url token output-dir epubcheck %))
                                          batch)))
                          vec)]
         (print-summary output-dir results)))))
